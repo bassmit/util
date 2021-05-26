@@ -31,16 +31,6 @@ public static class Math
         return fraction >= 0 && fraction <= 1;
     }
 
-    public static double ProjectSeg2(double2 v1, double2 v2, double2 p, out double2 result)
-    {
-        var e1 = v2 - v1;
-        var e2 = p - v1;
-        var lengthsq = math.lengthsq(e1);
-        var fraction = math.dot(e1, e2) / lengthsq;
-        result = new float2(v1 + fraction * e1);
-        return fraction;
-    }
-
     public static float Square(float f) => f * f;
     public static double Square(double f) => f * f;
     public static float Circumference(float r) => 2 * math.PI * r;
