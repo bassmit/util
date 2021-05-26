@@ -1,6 +1,6 @@
 using System.Numerics;
 using Unity.Mathematics;
-using UnityEngine.Assertions;
+using Unity.Assertions;
 
 public static class Math
 {

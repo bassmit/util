@@ -1,10 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using Unity.Mathematics;
-using UnityEngine;
 
 public static class Intersect
 {
-    public static bool RayRect(float3 rectP, float3 rectN, quaternion rectR, Vector2 rectS, float3 rayA, float3 rayB, out float3 intersection)
+    public static bool RayRect(float3 rectP, float3 rectN, quaternion rectR, float2 rectS, float3 rayA, float3 rayB, out float3 intersection)
     {
         var ray = rayB - rayA;
         var rayD = math.normalize(ray);
@@ -125,7 +124,7 @@ public static class Intersect
             }
 
             // One-dimensional intersection test between a and b
-            var longSpan = Mathf.Max(aMax, bMax) - Mathf.Min(aMin, bMin);
+            var longSpan = math.max(aMax, bMax) - math.min(aMin, bMin);
             var sumSpan = aMax - aMin + bMax - bMin;
             return longSpan >= sumSpan; // > to treat touching as intersection
         }
