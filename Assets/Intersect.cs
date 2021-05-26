@@ -85,21 +85,21 @@ public static class Intersect
         var vertsA = (float3*) &box0;
         var vertsB = (float3*) &box1;
 
-        return !Separated(box0.Right) &&
-               !Separated(box0.Up) &&
-               !Separated(box0.Forward) &&
-               !Separated(box1.Right) &&
-               !Separated(box1.Up) &&
-               !Separated(box1.Forward) &&
-               !Separated(math.cross(box0.Right, box1.Right)) &&
-               !Separated(math.cross(box0.Right, box1.Up)) &&
-               !Separated(math.cross(box0.Right, box1.Forward)) &&
-               !Separated(math.cross(box0.Up, box1.Right)) &&
-               !Separated(math.cross(box0.Up, box1.Up)) &&
-               !Separated(math.cross(box0.Up, box1.Forward)) &&
-               !Separated(math.cross(box0.Forward, box1.Right)) &&
-               !Separated(math.cross(box0.Forward, box1.Up)) &&
-               !Separated(math.cross(box0.Forward, box1.Forward));
+        return !(Separated(box0.Right) &&
+                 Separated(box0.Up) &&
+                 Separated(box0.Forward) &&
+                 Separated(box1.Right) &&
+                 Separated(box1.Up) &&
+                 Separated(box1.Forward) &&
+                 Separated(math.cross(box0.Right, box1.Right)) &&
+                 Separated(math.cross(box0.Right, box1.Up)) &&
+                 Separated(math.cross(box0.Right, box1.Forward)) &&
+                 Separated(math.cross(box0.Up, box1.Right)) &&
+                 Separated(math.cross(box0.Up, box1.Up)) &&
+                 Separated(math.cross(box0.Up, box1.Forward)) &&
+                 Separated(math.cross(box0.Forward, box1.Right)) &&
+                 Separated(math.cross(box0.Forward, box1.Up)) &&
+                 Separated(math.cross(box0.Forward, box1.Forward)));
 
         bool Separated(float3 axis)
         {
