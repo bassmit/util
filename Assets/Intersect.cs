@@ -227,26 +227,6 @@ public static class Intersect
         return true;
     }
 
-    public static double2 LineSegClamped(double2 l0, double2 l1, double2 s0, double2 s1)
-    {
-        var s10 = l1 - l0;
-        var s32 = s1 - s0;
-        var denom = s10.x * s32.y - s32.x * s10.y;
-
-        if (denom == 0)
-            return (s0 + s1) / 2;
-
-        var denomPositive = denom > 0;
-        var s02 = l0 - s0;
-        var sNumer = s10.x * s02.y - s10.y * s02.x;
-
-        if (sNumer < 0 == denomPositive)
-            return s0;
-        if (sNumer > denom == denomPositive)
-            return s1;
-        return s0 + sNumer / denom * s32;
-    }
-
     public static int SegCircle(double2 E, double2 L, double2 C, double r)
     {
         // use epsilon to capture points on circle
