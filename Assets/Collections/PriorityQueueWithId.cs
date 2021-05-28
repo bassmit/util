@@ -177,9 +177,9 @@ namespace Collections
 
     sealed class PriorityQueueWithIdDebugView<T> where T : struct, IComparable<T>
     {
-        PriorityQueue<T> _data;
+        PriorityQueueWithId<T> _data;
 
-        public PriorityQueueWithIdDebugView(PriorityQueue<T> data)
+        public PriorityQueueWithIdDebugView(PriorityQueueWithId<T> data)
         {
             _data = data;
         }
