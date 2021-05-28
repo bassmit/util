@@ -7,15 +7,15 @@ using Unity.Collections.LowLevel.Unsafe;
 namespace Collections
 {
     [DebuggerDisplay("Count = {Count}")]
-    [DebuggerTypeProxy(typeof(PriorityQueueDebugView_LowerKey<>))]
-    unsafe struct PriorityQueue_LowerKey<T> where T : struct, IComparable<T>
+    [DebuggerTypeProxy(typeof(PriorityQueueWithIdDebugView<>))]
+    unsafe struct PriorityQueueWithId<T> where T : struct, IComparable<T>
     {
         readonly Allocator _allocator;
         List<Wrapper> _data;
         List<Lookup> _lookup;
         readonly int* _free;
 
-        public PriorityQueue_LowerKey(int intialCapacity, Allocator allocator = Allocator.Persistent)
+        public PriorityQueueWithId(int intialCapacity, Allocator allocator = Allocator.Persistent)
         {
             _allocator = allocator;
             Assert.IsTrue(intialCapacity > 1);
@@ -175,11 +175,11 @@ namespace Collections
         }
     }
 
-    sealed class PriorityQueueDebugView_LowerKey<T> where T : struct, IComparable<T>
+    sealed class PriorityQueueWithIdDebugView<T> where T : struct, IComparable<T>
     {
         PriorityQueue<T> _data;
 
-        public PriorityQueueDebugView_LowerKey(PriorityQueue<T> data)
+        public PriorityQueueWithIdDebugView(PriorityQueue<T> data)
         {
             _data = data;
         }
