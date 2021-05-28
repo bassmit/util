@@ -1,5 +1,5 @@
 # Util
-Growing collection of BURST compatible math and utility functions including:
+Math and utility functions:
 
 - 2 and 3d geometry
 - intersection of basic shapes
@@ -9,4 +9,5 @@ Growing collection of BURST compatible math and utility functions including:
 
 Collections:
 
-- Priority queue 
+- priority queue
+- 2d bounding volume hierarchy
