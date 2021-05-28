@@ -6,3 +6,7 @@ Growing collection of BURST compatible math and utility functions including:
 - easing
 - noise
 - rigidbody prediction
+
+Collections:
+
+- Priority queue 
