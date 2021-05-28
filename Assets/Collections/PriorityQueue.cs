@@ -2,56 +2,28 @@ using System;
 using System.Diagnostics;
 using Unity.Assertions;
 using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
 
 namespace Collections
 {
     [DebuggerDisplay("Count = {Count}")]
     [DebuggerTypeProxy(typeof(PriorityQueueDebugView<>))]
-    unsafe struct PriorityQueue<T> where T : struct, IComparable<T>
+    struct PriorityQueue<T> where T : struct, IComparable<T>
     {
-        readonly Allocator _allocator;
-        List<Wrapper> _data;
-        List<Lookup> _lookup;
-        readonly int* _free;
+        List<T> _data;
 
         public PriorityQueue(int intialCapacity, Allocator allocator = Allocator.Persistent)
         {
-            _allocator = allocator;
             Assert.IsTrue(intialCapacity > 1);
-            _data = new List<Wrapper>(intialCapacity, allocator);
-            _lookup = new List<Lookup>(intialCapacity, allocator);
-            _free = (int*) Mem.Malloc<int>(allocator);
-            *_free = -1;
+            _data = new List<T>(intialCapacity, allocator);
         }
 
-        public T Top => _data[0].Item;
+        public T Top => _data[0];
         public int Count => _data.Length;
 
-        public void LowerKey(T n, int id)
+        public void Insert(T n)
         {
-            var i = _lookup[id].DataIndex;
-            var w = new Wrapper(n, id);
-            Assert.IsTrue(w.CompareTo(_data[i]) < 0);
-            Percolate(i, w);
-        }
-
-        public int Insert(T n)
-        {
-            if (*_free == -1)
-            {
-                _lookup.Add(new Lookup{ Next = -1});
-                *_free = _lookup.Length - 1;
-            }
-
-            var free = *_free;
-            _lookup[free].DataIndex = _data.Length;
-            *_free = _lookup[free].Next;
-            var wrapped = new Wrapper(n, free);
-
             _data.Resize(_data.Length + 1);
-            Percolate(_data.Length - 1, wrapped);
-            return free;
+            Percolate(_data.Length - 1, n);
         }
 
         public T Extract()
@@ -64,38 +36,20 @@ namespace Collections
             else
                 _data.Clear();
 
-            _lookup[top.LookupIndex].Next = *_free;
-            *_free = top.LookupIndex;
-
-            return top.Item;
-        }
-
-        public void Remove(int id)
-        {
-            _lookup[id].Next = *_free;
-            *_free = id;
-
-            if (Count > 1)
-                Trickle(_lookup[id].DataIndex, _data.TakeLast());
-            else
-                _data.Clear();
+            return top;
         }
 
         public void Clear()
         {
             _data.Clear();
-            _lookup.Clear();
-            *_free = -1;
         }
 
         public void Dispose()
         {
             _data.Dispose();
-            _lookup.Dispose();
-            UnsafeUtility.Free(_free, _allocator);
         }
 
-        void Trickle(int i, Wrapper n)
+        void Trickle(int i, T n)
         {
             if (i == Count)
                 return;
@@ -110,7 +64,6 @@ namespace Collections
 
                 var e = _data[child];
                 _data[i] = e;
-                _lookup[e.LookupIndex].DataIndex = i;
 
                 i = child;
                 child = Left(i);
@@ -119,7 +72,7 @@ namespace Collections
             Percolate(i, n);
         }
 
-        void Percolate(int i, Wrapper n)
+        void Percolate(int i, T n)
         {
             var parent = Parent(i);
 
@@ -128,51 +81,18 @@ namespace Collections
                 var e = _data[parent];
                 _data[i] = e;
 
-                _lookup[e.LookupIndex].DataIndex = i;
-
                 i = parent;
                 parent = Parent(i);
             }
 
             _data[i] = n;
-            _lookup[n.LookupIndex].DataIndex = i;
         }
 
         static int Parent(int i) => (i - 1) >> 1;
         static int Left(int i) => (i << 1) + 1;
 
         // can not get PriorityQueueDebugView to work as a nested class
-        internal T DebugGet(int i) => _data[i].Item;
-
-        struct Lookup
-        {
-            public int DataIndex;
-            public int Next;
-
-            public override string ToString()
-            {
-                return $"Next: {Next}, DataIndex: {DataIndex}";
-            }
-        }
-
-        struct Wrapper : IComparable<Wrapper>
-        {
-            public T Item;
-            public readonly int LookupIndex;
-
-            public Wrapper(T item, int lookupIndex)
-            {
-                Item = item;
-                LookupIndex = lookupIndex;
-            }
-
-            public int CompareTo(Wrapper other) => Item.CompareTo(other.Item);
-
-            public override string ToString()
-            {
-                return $"LookupIndex: {LookupIndex}, Item: {Item}";
-            }
-        }
+        internal T DebugGet(int i) => _data[i];
     }
 
     sealed class PriorityQueueDebugView<T> where T : struct, IComparable<T>
