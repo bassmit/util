@@ -1,7 +1,7 @@
 ﻿using Unity.Assertions;
 using Unity.Collections.LowLevel.Unsafe;
 
-static class UnsafeListExtensions
+static class Extensions
 {
     public static unsafe T Read<T>(this UnsafeList l, int index)
     {
