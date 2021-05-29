@@ -1,5 +1,7 @@
 ﻿using Unity.Mathematics;
 
+// hyperphysics.phy-astr.gsu.edu/hbase/lindrg2.html#c2
+
 public static class Predict
 {
     public static float Distance(float speed, float drag, float time)
