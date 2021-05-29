@@ -24,12 +24,11 @@ using System.Diagnostics;
 using Unity.Assertions;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using Unity.Entities;
 using Unity.Mathematics;
 
 namespace Collections.BVH2D
 {
-    public unsafe struct Tree
+    public unsafe struct Tree<T> where T : unmanaged
     {
         const int NullNode = -1;
 
@@ -77,7 +76,7 @@ namespace Collections.BVH2D
             _nodes = null;
         }
 
-        public int Insert(AABB aabb, Entity userData)
+        public int Insert(AABB aabb, T userData)
         {
             var id = AllocateNode();
 
@@ -108,7 +107,7 @@ namespace Collections.BVH2D
             _nodes[id].Moved = true;
         }
 
-        public Entity GetUserData(int id)
+        public T GetUserData(int id)
         {
             Assert.IsTrue(0 <= id && id < _nodeCapacity);
             return _nodes[id].UserData;
@@ -141,7 +140,7 @@ namespace Collections.BVH2D
             }
         }
 
-        public void Query<T>(T callback, AABB aabb) where T : IQueryResultCollector
+        public void Query<TC>(TC callback, AABB aabb) where TC : IQueryResultCollector<T>
         {
             var stack = new Stack<int>(256, Allocator.Temp);
             stack.Push(_root);
@@ -171,7 +170,7 @@ namespace Collections.BVH2D
             }
         }
 
-        public void RayCast<T>(T callback, RayCastInput input) where T : IRayCastResultCollector
+        public void RayCast<TC>(TC callback, RayCastInput input) where TC : IRayCastResultCollector<T>
         {
             var p1 = input.P1;
             var p2 = input.P2;
@@ -301,7 +300,7 @@ namespace Collections.BVH2D
             _nodes[nodeId].Child1 = NullNode;
             _nodes[nodeId].Child2 = NullNode;
             _nodes[nodeId].Height = 0;
-            _nodes[nodeId].UserData = Entity.Null;
+            _nodes[nodeId].UserData = default;
             _nodes[nodeId].Moved = false;
             ++_nodeCount;
             return nodeId;
@@ -397,7 +396,7 @@ namespace Collections.BVH2D
             var oldParent = _nodes[sibling].Parent;
             var newParent = AllocateNode();
             _nodes[newParent].Parent = oldParent;
-            _nodes[newParent].UserData = Entity.Null;
+            _nodes[newParent].UserData = default;
             _nodes[newParent].AABB.Combine(leafAABB, _nodes[sibling].AABB);
             _nodes[newParent].Height = _nodes[sibling].Height + 1;
 
@@ -867,7 +866,7 @@ namespace Collections.BVH2D
             // Enlarged AABB
             internal AABB AABB;
 
-            internal Entity UserData;
+            internal T UserData;
 
             internal int Parent;
             internal int Next

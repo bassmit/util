@@ -21,23 +21,22 @@
 // SOFTWARE.
 
 using Unity.Collections;
-using Unity.Entities;
 using Unity.Mathematics;
 
 namespace Collections.BVH2D
 {
-    public struct DynamicTree
+    public struct DynamicTree<T> where T : unmanaged
     {
         const float AABBExtension = .1f;
         const float AABBMultiplier = 4;
 
-        Tree _tree;
+        Tree<T> _tree;
 
         public bool IsCreated => _tree.IsCreated;
 
         public DynamicTree(Allocator allocator)
         {
-            _tree = new Tree(allocator);
+            _tree = new Tree<T>(allocator);
         }
 
         public void Dispose()
@@ -48,7 +47,7 @@ namespace Collections.BVH2D
         // Create a proxy in the tree as a leaf node. We return the index
         // of the node instead of a pointer so that we can grow
         // the node pool.
-        public int CreateProxy(AABB aabb, Entity userData)
+        public int CreateProxy(AABB aabb, T userData)
         {
             // Fatten the aabb.
             var r = new float2(AABBExtension);
@@ -108,7 +107,7 @@ namespace Collections.BVH2D
             return true;
         }
 
-        public Entity GetUserData(int proxyId) => _tree.GetUserData(proxyId);
+        public T GetUserData(int proxyId) => _tree.GetUserData(proxyId);
 
         public bool WasMoved(int proxyId) => _tree.WasMoved(proxyId);
 
@@ -118,8 +117,8 @@ namespace Collections.BVH2D
 
         public void ShiftOrigin(float2 newOrigin) => _tree.ShiftOrigin(newOrigin);
 
-        public void Query<T>(T callback, AABB aabb) where T : IQueryResultCollector => _tree.Query(callback, aabb);
+        public void Query<TC>(TC callback, AABB aabb) where TC : IQueryResultCollector<T> => _tree.Query(callback, aabb);
 
-        public void RayCast<T>(T callback, RayCastInput input) where T : IRayCastResultCollector => _tree.RayCast(callback, input);
+        public void RayCast<TC>(TC callback, RayCastInput input) where TC : IRayCastResultCollector<T> => _tree.RayCast(callback, input);
     }
 }

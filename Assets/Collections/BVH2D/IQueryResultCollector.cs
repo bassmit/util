@@ -1,9 +1,7 @@
-﻿using Unity.Entities;
-
-namespace Collections.BVH2D
+﻿namespace Collections.BVH2D
 {
-    public interface IQueryResultCollector
+    public interface IQueryResultCollector<in T>
     {
-        bool QueryCallback(Entity node);
+        bool QueryCallback(T node);
     }
 }
