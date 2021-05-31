@@ -10,7 +10,7 @@ public static class Noise
         const uint bitNoise2 = 0xB5297a4d;
         const uint bitNoise3 = 0x1b56c4e9;
 
-        var mangledBits = (uint)xPosition;
+        var mangledBits = (uint) xPosition;
         mangledBits *= bitNoise1;
         mangledBits += seed;
         mangledBits ^= mangledBits >> 8;
@@ -28,24 +28,24 @@ public static class Noise
         return Noise1d(position.x + primeNumber * position.y, seed);
     }
 
-    public static float noise1dZeroToOne(int xPosition, uint seed = 0)
+    public static float Noise1dZeroToOne(int xPosition, uint seed = 0)
     {
-        return Noise1d(xPosition, seed) / (float)uint.MaxValue;
+        return Noise1d(xPosition, seed) / (float) uint.MaxValue;
     }
 
-    public static float noise2dZeroToOne(int2 position, uint seed = 0)
+    public static float Noise2dZeroToOne(int2 position, uint seed = 0)
     {
-        return Noise2d(position, seed) / (float)uint.MaxValue;
+        return Noise2d(position, seed) / (float) uint.MaxValue;
     }
 
-    public static float noise1dMinusOneToOne(int xPosition, uint seed = 0)
+    public static float Noise1dMinusOneToOne(int xPosition, uint seed = 0)
     {
-        return noise1dZeroToOne(xPosition, seed) * 2.0f - 1.0f;
+        return Noise1dZeroToOne(xPosition, seed) * 2.0f - 1.0f;
     }
 
-    public static float noise2dMinusOneToOne(int2 position, uint seed = 0)
+    public static float Noise2dMinusOneToOne(int2 position, uint seed = 0)
     {
-        return noise2dZeroToOne(position, seed) * 2.0f - 1.0f;
+        return Noise2dZeroToOne(position, seed) * 2.0f - 1.0f;
     }
 
     public static float PerlinNoise1d(float xPosition, uint seed = 0)
@@ -54,8 +54,8 @@ public static class Noise
         var p1 = p0 + 1.0f;
         var t = xPosition - p0;
         var invT = -Easing.Flip(t);
-        var g0 = noise1dMinusOneToOne((int)p0, seed);
-        var g1 = noise1dMinusOneToOne((int)p1, seed);
+        var g0 = Noise1dMinusOneToOne((int) p0, seed);
+        var g1 = Noise1dMinusOneToOne((int) p1, seed);
         return math.lerp(g0 * t, g1 * invT, Easing.SmootherStep(t));
     }
 
@@ -66,7 +66,7 @@ public static class Noise
 
     public static float Angle(float2 position, uint seed = 0)
     {
-        return noise2dZeroToOne((int2) position, seed) * 2 * math.PI;
+        return Noise2dZeroToOne((int2) position, seed) * 2 * math.PI;
     }
 
     public static float PerlinNoise2d(float2 position, uint seed = 0)
