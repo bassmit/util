@@ -4,48 +4,49 @@
 
 public static class Predict
 {
-    public static float Distance(float speed, float drag, float time)
+    public static float Distance(double speed, double drag, double time)
     {
-        var invDrag = 1 / drag;
-        return speed * invDrag * (1 - math.pow(math.E, -time / invDrag));
+        var invDrag = 1d / drag;
+        return (float) (speed * invDrag * (1d - math.pow(math.E_DBL, -time / invDrag)));
     }
 
-    public static float Speed(float speed, float distance, float drag)
+    public static float Speed(double speed, double distance, double drag)
     {
-        var invDrag = 1 / drag;
+        var invDrag = 1d / drag;
         var time = Time(speed, distance, drag);
-        return speed * math.pow(math.E, -time / invDrag);
+        return (float) (speed * math.pow(math.E_DBL, -time / invDrag));
     }
 
-    public static float Time(float speed, float distance, float drag)
+    public static float Time(double speed, double distance, double drag)
     {
-        var invDrag = 1 / drag;
-        return invDrag * math.log(invDrag * speed / (invDrag * speed - distance));
+        var invDrag = 1d / drag;
+        return (float) (invDrag * math.log(invDrag * speed / (invDrag * speed - distance)));
     }
 
-    public static float3 Position(float3 velocity, float drag, float time)
+    public static float3 Position(double3 velocity, double drag, double time)
     {
-        var invDrag = 1 / drag;
-        return velocity * invDrag * (1 - math.pow(math.E, -time / invDrag));
+        var invDrag = 1d / drag;
+        return (float3) (velocity * invDrag * (1d - math.pow(math.E_DBL, -time / invDrag)));
     }
 
-    public static float3 Position(float3 velocity, float drag, float time, float3 force, float mass)
+    public static float3 Position(double3 velocity, double drag, double time, double3 force, double mass)
     {
-        var invDrag = 1 / drag;
-        var a = math.pow(math.E, -time / invDrag);
+        var invDrag = 1d / drag;
+        var a = math.pow(math.E_DBL, -time / invDrag);
         var b = force / drag / mass;
-        return b * time + velocity * invDrag * (1 - a) + b * invDrag * (a - 1);
+        return (float3) (b * time + velocity * invDrag * (1d - a) + b * invDrag * (a - 1d));
     }
 
-    public static float3 Force(float3 velocity, float drag, float time, float3 target, float mass)
+    public static float3 Force(double3 velocity, double drag, double time, double3 target, double mass)
     {
-        var a = math.pow(math.E, drag * time);
-        return drag * mass * (drag * target * a - velocity * a + velocity) / (a * (drag * time - 1) + 1);
+        var a = math.pow(math.E_DBL, drag * time);
+        return (float3) (drag * mass * (drag * target * a - velocity * a + velocity) / (a * (drag * time - 1d) + 1d));
     }
 
-    public static float3 Velocity(float3 force, float drag, float time, float3 target, float mass)
+    public static float3 Velocity(double3 force, double drag, double time, double3 target, double mass)
     {
-        var a = math.pow(math.E, drag * time);
-        return (drag * drag * mass * target * a + force * (a * (1 - drag * time) - 1)) / (drag * mass * (a - 1));
+        var a = math.pow(math.E_DBL, drag * time);
+        var b = drag * mass;
+        return (float3) ((drag * b * target * a + force * (a * (1d - drag * time) - 1d)) / (b * (a - 1d)));
     }
 }

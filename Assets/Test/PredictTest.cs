@@ -12,7 +12,7 @@ public class PredictTest : MonoBehaviour, IConvertGameObjectToEntity
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
     {
         var target = Target.position;
-        var toTarget = target - transform.position;
+        float3 toTarget = target - transform.position;
 
         // todo automate syncing damping and mass
         var v = Predict.Velocity(new float3(0, -9.81f, 0), 0.2f, Time, toTarget, 1);
