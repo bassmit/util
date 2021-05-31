@@ -1,5 +1,7 @@
 using Unity.Mathematics;
 
+// https://www.youtube.com/watch?v=LWFzPP8ZbdU
+
 public static class Noise
 {
     public static uint Noise1d(int xPosition, uint seed = 0)

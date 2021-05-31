@@ -1,5 +1,7 @@
 ﻿using Unity.Mathematics;
 
+// https://www.youtube.com/watch?v=mr5xkf6zSzk
+
 public static class Easing
 {
     public static float SmoothStep(float t)
