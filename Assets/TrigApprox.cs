@@ -14,6 +14,12 @@ public static class TrigApprox
     const double TanSixthPi = 0.00913877699601225973909035239229;
     const double TanTwelfthPi = 0.00456929309630527945159583147451;
 
+    const float PiF = (float) Pi;
+    const float TwoPiF = (float) TwoPi;
+    const float HalfPiF = (float) HalfPi;
+    const float FourOverPiF = (float) FourOverPi;
+    const float ThreeHalfPiF = (float) ThreeHalfPi;
+    
     static float cos_32s(float x)
     {
         const float c1 = 0.99940307f;
@@ -26,21 +32,21 @@ public static class TrigApprox
 
     public static float cos_32(float x)
     {
-        x %= TwoPi;
+        x %= TwoPiF;
         if (x < 0) x = -x;
         var quad = (int) (x * TwoOverPi);
 
         return quad switch
         {
             0 => cos_32s(x),
-            1 => -cos_32s(Pi - x),
-            2 => -cos_32s(x - Pi),
-            3 => cos_32s(TwoPi - x),
+            1 => -cos_32s(PiF - x),
+            2 => -cos_32s(x - PiF),
+            3 => cos_32s(TwoPiF - x),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public static float sin_32(float x) => cos_32(HalfPi - x);
+    public static float sin_32(float x) => cos_32(HalfPiF - x);
 
     static float cos_52s(float x)
     {
@@ -55,21 +61,21 @@ public static class TrigApprox
 
     public static float cos_52(float x)
     {
-        x %= TwoPi;
+        x %= TwoPiF;
         if (x < 0) x = -x;
         var quad = (int) (x * TwoOverPi);
 
         return quad switch
         {
             0 => cos_52s(x),
-            1 => -cos_52s(Pi - x),
-            2 => -cos_52s(x - Pi),
-            3 => cos_52s(TwoPi - x),
+            1 => -cos_52s(PiF - x),
+            2 => -cos_52s(x - PiF),
+            3 => cos_52s(TwoPiF - x),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public static float sin_52(float x) => cos_52(HalfPi - x);
+    public static float sin_52(float x) => cos_52(HalfPiF - x);
 
     static double cos_73s(double x)
     {
@@ -149,19 +155,19 @@ public static class TrigApprox
     /// </summary>
     public static float tan_32(float x)
     {
-        x %= TwoPi;
+        x %= TwoPiF;
         var octant = (int) (x * FourOverPi);
 
         return octant switch
         {
-            0 => tan_32s(x * FourOverPi),
-            1 => (1.0 / tan_32s((HalfPi - x) * FourOverPi)),
-            2 => (-1.0 / tan_32s((x - HalfPi) * FourOverPi)),
-            3 => -tan_32s((Pi - x) * FourOverPi),
-            4 => tan_32s((x - Pi) * FourOverPi),
-            5 => (1.0 / tan_32s((ThreeHalfPi - x) * FourOverPi)),
-            6 => (-1.0 / tan_32s((x - ThreeHalfPi) * FourOverPi)),
-            7 => -tan_32s((TwoPi - x) * FourOverPi),
+            0 => tan_32s(x * FourOverPiF),
+            1 => (1f / tan_32s((HalfPiF - x) * FourOverPiF)),
+            2 => (-1f / tan_32s((x - HalfPiF) * FourOverPiF)),
+            3 => -tan_32s((PiF - x) * FourOverPiF),
+            4 => tan_32s((x - PiF) * FourOverPiF),
+            5 => (1f / tan_32s((ThreeHalfPiF - x) * FourOverPiF)),
+            6 => (-1f / tan_32s((x - ThreeHalfPiF) * FourOverPiF)),
+            7 => -tan_32s((TwoPiF - x) * FourOverPiF),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -181,19 +187,19 @@ public static class TrigApprox
     /// </summary>
     public static float tan_56(float x)
     {
-        x %= TwoPi;
+        x %= TwoPiF;
         var octant = (int) (x * FourOverPi);
 
         return octant switch
         {
-            0 => tan_56s(x * FourOverPi),
-            1 => (1.0 / tan_56s((HalfPi - x) * FourOverPi)),
-            2 => (-1.0 / tan_56s((x - HalfPi) * FourOverPi)),
-            3 => -tan_56s((Pi - x) * FourOverPi),
-            4 => tan_56s((x - Pi) * FourOverPi),
-            5 => (1.0 / tan_56s((ThreeHalfPi - x) * FourOverPi)),
-            6 => (-1.0 / tan_56s((x - ThreeHalfPi) * FourOverPi)),
-            7 => -tan_56s((TwoPi - x) * FourOverPi),
+            0 => tan_56s(x * FourOverPiF),
+            1 => (1f / tan_56s((HalfPiF - x) * FourOverPiF)),
+            2 => (-1f / tan_56s((x - HalfPiF) * FourOverPiF)),
+            3 => -tan_56s((PiF - x) * FourOverPiF),
+            4 => tan_56s((x - PiF) * FourOverPiF),
+            5 => (1f / tan_56s((ThreeHalfPiF - x) * FourOverPiF)),
+            6 => (-1f / tan_56s((x - ThreeHalfPiF) * FourOverPiF)),
+            7 => -tan_56s((TwoPiF - x) * FourOverPiF),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
