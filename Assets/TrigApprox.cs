@@ -4,285 +4,170 @@ using System;
 
 public static class TrigApprox
 {
-	const double pi = 3.1415926535897932384626433;
-	const double twopi = 2.0 * pi;
-	const double two_over_pi = 2.0 / pi;
-	const double halfpi = pi / 2.0;
-	const double threehalfpi = 3.0 * pi / 2.0;
-	const double four_over_pi = 4.0 / pi;
-	const double qtrpi = pi / 4.0;
-	const double sixthpi = pi / 6.0;
-	const double tansixthpi = 0.00913877699601225973909035239229;
-	const double twelfthpi = pi / 12.0;
-	const double tantwelfthpi = 0.00456929309630527945159583147451;
+    const double pi = 3.1415926535897932384626433;
+    const double twopi = 2.0 * pi;
+    const double two_over_pi = 2.0 / pi;
+    const double halfpi = pi / 2.0;
+    const double threehalfpi = 3.0 * pi / 2.0;
+    const double four_over_pi = 4.0 / pi;
+    const double qtrpi = pi / 4.0;
+    const double sixthpi = pi / 6.0;
+    const double tansixthpi = 0.00913877699601225973909035239229;
+    const double twelfthpi = pi / 12.0;
+    const double tantwelfthpi = 0.00456929309630527945159583147451;
 
     static float cos_32s(float x)
     {
-        const float c1= 0.99940307f;
-        const float c2=-0.49558072f;
-        const float c3= 0.03679168f;
+        const float c1 = 0.99940307f;
+        const float c2 = -0.49558072f;
+        const float c3 = 0.03679168f;
 
         var x2 = x * x;
-        return c1 + x2*(c2 + c3 * x2);
+        return c1 + x2 * (c2 + c3 * x2);
     }
-    
+
     public static float cos_32(float x)
     {
-	    x %= twopi;
-	    if (x < 0) x = -x;
-    	var quad = (int)(x * two_over_pi);
-        
-        switch (quad)
+        x %= twopi;
+        if (x < 0) x = -x;
+        var quad = (int) (x * two_over_pi);
+
+        return quad switch
         {
-	        case 0: return cos_32s(x);
-	        case 1: return -cos_32s(pi - x);
-	        case 2: return -cos_32s(x - pi);
-	        case 3: return cos_32s(twopi - x);
-	        default: throw new ArgumentOutOfRangeException();
-        }
+            0 => cos_32s(x),
+            1 => -cos_32s(pi - x),
+            2 => -cos_32s(x - pi),
+            3 => cos_32s(twopi - x),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
     public static float sin_32(float x) => cos_32(halfpi - x);
 
-    // // *********************************************************
-    // // ***
-    // // ***   Routines to compute sine and cosine to 5.2 digits
-    // // ***  of accuracy. 
-    // // ***
-    // // *********************************************************
-    // //
-    // //		cos_52s computes cosine (x)
-    // //
-    // //  Accurate to about 5.2 decimal digits over the range [0, pi/2].
-    // //  The input argument is in radians.
-    // //
-    // //  Algorithm:
-    // //		cos(x)= c1 + c2*x**2 + c3*x**4 + c4*x**6
-    // //   which is the same as:
-    // //		cos(x)= c1 + x**2(c2 + c3*x**2 + c4*x**4)
-    // //		cos(x)= c1 + x**2(c2 + x**2(c3 + c4*x**2))
-    // //
-    // float cos_52s(float x)
-    // {
-    // const float c1= 0.9999932946;
-    // const float c2=-0.4999124376;
-    // const float c3= 0.0414877472;
-    // const float c4=-0.0012712095;
-    //
-    // float x2;							// The input argument squared
-    //
-    // x2=x * x;
-    // return (c1 + x2*(c2 + x2*(c3 + c4*x2)));
-    // }
-    //
-    // //
-    // //  This is the main cosine approximation "driver"
-    // // It reduces the input argument's range to [0, pi/2],
-    // // and then calls the approximator. 
-    // // See the notes for an explanation of the range reduction.
-    // //
-    // float cos_52(float x){
-    // 	int quad;						// what quadrant are we in?
-    //
-    // 	x=fmod(x, twopi);				// Get rid of values > 2* pi
-    // 	if(x<0)x=-x;					// cos(-x) = cos(x)
-    // 	quad=int(x * two_over_pi);			// Get quadrant # (0 to 3) we're in
-    // 	switch (quad){
-    // 	case 0: return  cos_52s(x);
-    // 	case 1: return -cos_52s(pi-x);
-    // 	case 2: return -cos_52s(x-pi);
-    // 	case 3: return  cos_52s(twopi-x);
-    // 	}
-    // }
-    // //
-    // //   The sine is just cosine shifted a half-pi, so
-    // // we'll adjust the argument and call the cosine approximation.
-    // //
-    // float sin_52(float x){
-    // 	return cos_52(halfpi-x);
-    // }
-    //
-    // // *********************************************************
-    // // ***
-    // // ***   Routines to compute sine and cosine to 7.3 digits
-    // // ***  of accuracy. 
-    // // ***
-    // // *********************************************************
-    // //
-    // //		cos_73s computes cosine (x)
-    // //
-    // //  Accurate to about 7.3 decimal digits over the range [0, pi/2].
-    // //  The input argument is in radians.
-    // //
-    // //  Algorithm:
-    // //		cos(x)= c1 + c2*x**2 + c3*x**4 + c4*x**6 + c5*x**8
-    // //   which is the same as:
-    // //		cos(x)= c1 + x**2(c2 + c3*x**2 + c4*x**4 + c5*x**6)
-    // //		cos(x)= c1 + x**2(c2 + x**2(c3 + c4*x**2 + c5*x**4))
-    // //		cos(x)= c1 + x**2(c2 + x**2(c3 + x**2(c4 + c5*x**2)))
-    // //
-    // double cos_73s(double x)
-    // {
-    // const double c1= 0.999999953464;
-    // const double c2=-0.499999053455;
-    // const double c3= 0.0416635846769;
-    // const double c4=-0.0013853704264;
-    // const double c5= 0.00002315393167;  	
-    // 																
-    //
-    // double x2;							// The input argument squared
-    //
-    // x2=x * x;
-    // return (c1 + x2*(c2 + x2*(c3 + x2*(c4 + c5*x2))));
-    // }
-    //
-    // //
-    // //  This is the main cosine approximation "driver"
-    // // It reduces the input argument's range to [0, pi/2],
-    // // and then calls the approximator. 
-    // // See the notes for an explanation of the range reduction.
-    // //
-    // double cos_73(double x){
-    // 	int quad;						// what quadrant are we in?
-    //
-    // 	x=fmod(x, twopi);				// Get rid of values > 2* pi
-    // 	if(x<0)x=-x;					// cos(-x) = cos(x)
-    // 	quad=int(x * two_over_pi);			// Get quadrant # (0 to 3) we're in
-    // 	switch (quad){
-    // 	case 0: return  cos_73s(x);
-    // 	case 1: return -cos_73s(pi-x);
-    // 	case 2: return -cos_73s(x-pi);
-    // 	case 3: return  cos_73s(twopi-x);
-    // 	}
-    // }
-    // //
-    // //   The sine is just cosine shifted a half-pi, so
-    // // we'll adjust the argument and call the cosine approximation.
-    // //
-    // double sin_73(double x){
-    // 	return cos_73(halfpi-x);
-    // }
-    //
-    // // *********************************************************
-    // // ***
-    // // ***   Routines to compute sine and cosine to 12.1 digits
-    // // ***  of accuracy. 
-    // // ***
-    // // *********************************************************
-    // //
-    // //		cos_121s computes cosine (x)
-    // //
-    // //  Accurate to about 12.1 decimal digits over the range [0, pi/2].
-    // //  The input argument is in radians.
-    // //
-    // //  Algorithm:
-    // //		cos(x)= c1 + c2*x**2 + c3*x**4 + c4*x**6 + c5*x**8 + c6*x**10 + c7*x**12
-    // //   which is the same as:
-    // //		cos(x)= c1 + x**2(c2 + c3*x**2 + c4*x**4 + c5*x**6 + c6*x**8 + c7*x**10)
-    // //		cos(x)= c1 + x**2(c2 + x**2(c3 + c4*x**2 + c5*x**4 + c6*x**6 + c7*x**8 ))
-    // //		cos(x)= c1 + x**2(c2 + x**2(c3 + x**2(c4 + c5*x**2 + c6*x**4 + c7*x**6 )))
-    // //		cos(x)= c1 + x**2(c2 + x**2(c3 + x**2(c4 + x**2(c5 + c6*x**2 + c7*x**4 ))))
-    // //		cos(x)= c1 + x**2(c2 + x**2(c3 + x**2(c4 + x**2(c5 + x**2(c6 + c7*x**2 )))))
-    // //
-    // double cos_121s(double x)
-    // {
-    // const double c1= 0.99999999999925182;
-    // const double c2=-0.49999999997024012;
-    // const double c3= 0.041666666473384543;
-    // const double c4=-0.001388888418000423;
-    // const double c5= 0.0000248010406484558;
-    // const double c6=-0.0000002752469638432;
-    // const double c7= 0.0000000019907856854;
-    //
-    // double x2;							// The input argument squared
-    //
-    // x2=x * x;
-    // return (c1 + x2*(c2 + x2*(c3 + x2*(c4 + x2*(c5 + x2*(c6 + c7*x2))))));
-    // }
-    //
-    // //
-    // //  This is the main cosine approximation "driver"
-    // // It reduces the input argument's range to [0, pi/2],
-    // // and then calls the approximator. 
-    // // See the notes for an explanation of the range reduction.
-    // //
-    // double cos_121(double x){
-    // 	int quad;						// what quadrant are we in?
-    //
-    // 	x=fmod(x, twopi);				// Get rid of values > 2* pi
-    // 	if(x<0)x=-x;					// cos(-x) = cos(x)
-    // 	quad=int(x * two_over_pi);			// Get quadrant # (0 to 3) we're in
-    // 	switch (quad){
-    // 	case 0: return  cos_121s(x);
-    // 	case 1: return -cos_121s(pi-x);
-    // 	case 2: return -cos_121s(x-pi);
-    // 	case 3: return  cos_121s(twopi-x);
-    // 	}
-    // }
-    // //
-    // //   The sine is just cosine shifted a half-pi, so
-    // // we'll adjust the argument and call the cosine approximation.
-    // //
-    // double sin_121(double x){
-    // 	return cos_121(halfpi-x);
-    // }
-    //
-    // // *********************************************************
-    // // ***
-    // // ***   Routines to compute tangent to 3.2 digits
-    // // ***  of accuracy. 
-    // // ***
-    // // *********************************************************
-    // //
-    // //		tan_32s computes tan(pi*x/4)
-    // //
-    // //  Accurate to about 3.2 decimal digits over the range [0, pi/4].
-    // //  The input argument is in radians. Note that the function
-    // //  computes tan(pi*x/4), NOT tan(x); it's up to the range
-    // //  reduction algorithm that calls this to scale things properly.
-    // //
-    // //  Algorithm:
-    // //		tan(x)= x*c1/(c2 + x**2)
-    // //
-    // float tan_32s(float x)
-    // {
-    // const float c1=-3.6112171;
-    // const float c2=-4.6133253;
-    //
-    // float x2;							// The input argument squared
-    //
-    // x2=x * x;
-    // return (x*c1/(c2 + x2));
-    // }
-    //
-    // //
-    // //  This is the main tangent approximation "driver"
-    // // It reduces the input argument's range to [0, pi/4],
-    // // and then calls the approximator. 
-    // // See the notes for an explanation of the range reduction.
-    // // Enter with positive angles only.
-    // //
-    // // WARNING: We do not test for the tangent approaching infinity,
-    // // which it will at x=pi/2 and x=3*pi/2. If this is a problem
-    // // in your application, take appropriate action.
-    // //
-    // float tan_32(float x){
-    // 	int octant;						// what octant are we in?
-    //
-    // 	x=fmod(x, twopi);				// Get rid of values >2 *pi
-    // 	octant=int(x * four_over_pi);			// Get octant # (0 to 7)
-    // 	switch (octant){
-    // 	case 0: return      tan_32s(x              *four_over_pi);
-    // 	case 1: return  1.0/tan_32s((halfpi-x)     *four_over_pi);
-    // 	case 2: return -1.0/tan_32s((x-halfpi)     *four_over_pi);
-    // 	case 3: return -    tan_32s((pi-x)         *four_over_pi);
-    // 	case 4: return      tan_32s((x-pi)         *four_over_pi);
-    // 	case 5: return  1.0/tan_32s((threehalfpi-x)*four_over_pi);
-    // 	case 6: return -1.0/tan_32s((x-threehalfpi)*four_over_pi);
-    // 	case 7: return -    tan_32s((twopi-x)      *four_over_pi);
-    // 	}
-    // }
-    //
+    float cos_52s(float x)
+    {
+        const float c1 = 0.9999932946f;
+        const float c2 = -0.4999124376f;
+        const float c3 = 0.0414877472f;
+        const float c4 = -0.0012712095f;
+
+        var x2 = x * x;
+        return c1 + x2 * (c2 + x2 * (c3 + c4 * x2));
+    }
+
+    public static float cos_52(float x)
+    {
+        x %= twopi;
+        if (x < 0) x = -x;
+        var quad = (int) (x * two_over_pi);
+
+        return quad switch
+        {
+            0 => cos_52s(x),
+            1 => -cos_52s(pi - x),
+            2 => -cos_52s(x - pi),
+            3 => cos_52s(twopi - x),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    public static float sin_52(float x) => cos_52(halfpi - x);
+
+    static double cos_73s(double x)
+    {
+        const double c1 = 0.999999953464;
+        const double c2 = -0.499999053455;
+        const double c3 = 0.0416635846769;
+        const double c4 = -0.0013853704264;
+        const double c5 = 0.00002315393167;
+
+
+        var x2 = x * x;
+        return c1 + x2 * (c2 + x2 * (c3 + x2 * (c4 + c5 * x2)));
+    }
+
+    public static double cos_73(double x)
+    {
+        x %= twopi;
+        if (x < 0) x = -x;
+        var quad = (int) (x * two_over_pi);
+
+        return quad switch
+        {
+            0 => cos_73s(x),
+            1 => -cos_73s(pi - x),
+            2 => -cos_73s(x - pi),
+            3 => cos_73s(twopi - x),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    public static double sin_73(double x) => cos_73(halfpi - x);
+
+    static double cos_121s(double x)
+    {
+        const double c1 = 0.99999999999925182;
+        const double c2 = -0.49999999997024012;
+        const double c3 = 0.041666666473384543;
+        const double c4 = -0.001388888418000423;
+        const double c5 = 0.0000248010406484558;
+        const double c6 = -0.0000002752469638432;
+        const double c7 = 0.0000000019907856854;
+
+        var x2 = x * x;
+        return c1 + x2 * (c2 + x2 * (c3 + x2 * (c4 + x2 * (c5 + x2 * (c6 + c7 * x2)))));
+    }
+
+    public static double cos_121(double x)
+    {
+        x %= twopi;
+        if (x < 0) x = -x;
+        var quad = (int) (x * two_over_pi);
+
+        return quad switch
+        {
+            0 => cos_121s(x),
+            1 => -cos_121s(pi - x),
+            2 => -cos_121s(x - pi),
+            3 => cos_121s(twopi - x),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    public static double sin_121(double x) => cos_121(halfpi - x);
+
+    float tan_32s(float x)
+    {
+        const float c1 = -3.6112171f;
+        const float c2 = -4.6133253f;
+
+        var x2 = x * x;
+        return x * c1 / (c2 + x2);
+    }
+
+
+    /// <summary>
+    /// input not tested for tangent approaching infinity, which it will at x=pi/2 and x=3*pi/2
+    /// </summary>
+    public static float tan_32(float x)
+    {
+        x %= twopi;
+        var octant = (int) (x * four_over_pi);
+
+        return octant switch
+        {
+            0 => tan_32s(x * four_over_pi),
+            1 => (1.0 / tan_32s((halfpi - x) * four_over_pi)),
+            2 => (-1.0 / tan_32s((x - halfpi) * four_over_pi)),
+            3 => -tan_32s((pi - x) * four_over_pi),
+            4 => tan_32s((x - pi) * four_over_pi),
+            5 => (1.0 / tan_32s((threehalfpi - x) * four_over_pi)),
+            6 => (-1.0 / tan_32s((x - threehalfpi) * four_over_pi)),
+            7 => -tan_32s((twopi - x) * four_over_pi),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
     // // *********************************************************
     // // ***
     // // ***   Routines to compute tangent to 5.6 digits
@@ -326,7 +211,7 @@ public static class TrigApprox
     // float tan_56(float x){
     // 	int octant;						// what octant are we in?
     //
-    // 	x=fmod(x, twopi);				// Get rid of values >2 *pi
+    // 	x %= twopi;				// Get rid of values >2 *pi
     // 	octant=int(x * four_over_pi);			// Get octant # (0 to 7)
     // 	switch (octant){
     // 	case 0: return      tan_56s(x              *four_over_pi);
@@ -385,7 +270,7 @@ public static class TrigApprox
     // double tan_82(double x){
     // 	int octant;						// what octant are we in?
     //
-    // 	x=fmod(x, twopi);				// Get rid of values >2 *pi
+    // 	x %= twopi;				// Get rid of values >2 *pi
     // 	octant=int(x * four_over_pi);			// Get octant # (0 to 7)
     // 	switch (octant){
     // 	case 0: return      tan_82s(x              *four_over_pi);
@@ -445,7 +330,7 @@ public static class TrigApprox
     // double tan_14(double x){
     // 	int octant;						// what octant are we in?
     //
-    // 	x=fmod(x, twopi);				// Get rid of values >2 *pi
+    // 	x %= twopi;				// Get rid of values >2 *pi
     // 	octant=int(x * four_over_pi);			// Get octant # (0 to 7)
     // 	switch (octant){
     // 	case 0: return      tan_14s(x              *four_over_pi);
