@@ -1,90 +1,49 @@
 // http://www.ganssle.com/item/approximations-for-trig-c-code.htm
 
+using System;
+
 public static class TrigApprox
 {
-    // //  The following code implements approximations to various trig functions.
-    // //
-    // //  This is demo code to guide developers in implementing their own approximation
-    // // software. This code is merely meant to illustrate algorithms.
-    //
-    // #include <iostream>
-    // #include <math.h>
-    // #include <stdio.h>
-    // #include <stdlib.h>
-    // using namespace std;
-    //
-    // #define TRUE 1
-    // #define FALSE 0
-    //
-    // // Math constants we'll use
-    // double const pi=3.1415926535897932384626433;	// pi
-    // double const twopi=2.0*pi;			// pi times 2
-    // double const two_over_pi= 2.0/pi;		// 2/pi
-    // double const halfpi=pi/2.0;			// pi divided by 2
-    // double const threehalfpi=3.0*pi/2.0;  		// pi times 3/2, used in tan routines
-    // double const four_over_pi=4.0/pi;		// 4/pi, used in tan routines
-    // double const qtrpi=pi/4.0;			// pi/4.0, used in tan routines
-    // double const sixthpi=pi/6.0;			// pi/6.0, used in atan routines
-    // double const tansixthpi=tan(sixthpi);		// tan(pi/6), used in atan routines
-    // double const twelfthpi=pi/12.0;			// pi/12.0, used in atan routines
-    // double const tantwelfthpi=tan(twelfthpi);	// tan(pi/12), used in atan routines
-    //
-    // // *********************************************************
-    // // ***
-    // // ***   Routines to compute sine and cosine to 3.2 digits
-    // // ***  of accuracy. 
-    // // ***
-    // // *********************************************************
-    // //
-    // //		cos_32s computes cosine (x)
-    // //
-    // //  Accurate to about 3.2 decimal digits over the range [0, pi/2].
-    // //  The input argument is in radians.
-    // //
-    // //  Algorithm:
-    // //		cos(x)= c1 + c2*x**2 + c3*x**4
-    // //   which is the same as:
-    // //		cos(x)= c1 + x**2(c2 + c3*x**2)
-    // //
-    // float cos_32s(float x)
-    // {
-    // const float c1= 0.99940307;
-    // const float c2=-0.49558072;
-    // const float c3= 0.03679168;
-    //
-    // float x2;							// The input argument squared
-    //
-    // x2=x * x;
-    // return (c1 + x2*(c2 + c3 * x2));
-    // }
-    //
-    // //
-    // //  This is the main cosine approximation "driver"
-    // // It reduces the input argument's range to [0, pi/2],
-    // // and then calls the approximator. 
-    // // See the notes for an explanation of the range reduction.
-    // //
-    // float cos_32(float x){
-    // 	int quad;						// what quadrant are we in?
-    //
-    // 	x=fmod(x, twopi);				// Get rid of values > 2* pi
-    // 	if(x<0)x=-x;					// cos(-x) = cos(x)
-    // 	quad=int(x * two_over_pi);			// Get quadrant # (0 to 3) we're in
-    // 	switch (quad){
-    // 	case 0: return  cos_32s(x);
-    // 	case 1: return -cos_32s(pi-x);
-    // 	case 2: return -cos_32s(x-pi);
-    // 	case 3: return  cos_32s(twopi-x);
-    // 	}
-    // }
-    // //
-    // //   The sine is just cosine shifted a half-pi, so
-    // // we'll adjust the argument and call the cosine approximation.
-    // //
-    // float sin_32(float x){
-    // 	return cos_32(halfpi-x);
-    // }
-    //
+	const double pi = 3.1415926535897932384626433;
+	const double twopi = 2.0 * pi;
+	const double two_over_pi = 2.0 / pi;
+	const double halfpi = pi / 2.0;
+	const double threehalfpi = 3.0 * pi / 2.0;
+	const double four_over_pi = 4.0 / pi;
+	const double qtrpi = pi / 4.0;
+	const double sixthpi = pi / 6.0;
+	const double tansixthpi = 0.00913877699601225973909035239229;
+	const double twelfthpi = pi / 12.0;
+	const double tantwelfthpi = 0.00456929309630527945159583147451;
+
+    static float cos_32s(float x)
+    {
+        const float c1= 0.99940307f;
+        const float c2=-0.49558072f;
+        const float c3= 0.03679168f;
+
+        var x2 = x * x;
+        return c1 + x2*(c2 + c3 * x2);
+    }
+    
+    public static float cos_32(float x)
+    {
+	    x %= twopi;
+	    if (x < 0) x = -x;
+    	var quad = (int)(x * two_over_pi);
+        
+        switch (quad)
+        {
+	        case 0: return cos_32s(x);
+	        case 1: return -cos_32s(pi - x);
+	        case 2: return -cos_32s(x - pi);
+	        case 3: return cos_32s(twopi - x);
+	        default: throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    public static float sin_32(float x) => cos_32(halfpi - x);
+
     // // *********************************************************
     // // ***
     // // ***   Routines to compute sine and cosine to 5.2 digits
