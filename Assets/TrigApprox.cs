@@ -1,8 +1,12 @@
 // http://www.ganssle.com/item/approximations-for-trig-c-code.htm
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Unity.Mathematics;
 using UnityEditor;
-using UnityEngine;
+using Debug = UnityEngine.Debug;
+using Random = Unity.Mathematics.Random;
 
 public static class TrigApprox
 {
@@ -394,5 +398,149 @@ public static class TrigApprox
             var b = i * 2.0 * Pi / 360.0;
             Debug.Log($"{i}, {Math.Cos(b)}, {Math.Sin(b)}, {Math.Tan(b)}, {Math.Atan(Math.Tan(b))}, {Math.Cos(b) - Cos_32((float) b)}, {Math.Sin(b) - Sin_32((float) b)}, {Math.Cos(b) - Cos_52((float) b)}, {Math.Sin(b) - Sin_52((float) b)}, {Math.Cos(b) - Cos_73(b)}, {Math.Sin(b) - Sin_73(b)}, {Math.Cos(b) - Cos_121(b)}, {Math.Sin(b) - Sin_121(b)}, {100.0 * (Math.Tan(b) - Tan_32((float) b)) / Tan_32((float) b)}, {100.0 * (Math.Tan(b) - Tan_56((float) b)) / Tan_56((float) b)}, {100.0 * (Math.Tan(b) - Tan_82(b)) / Tan_82(b)}, {100.0 * (Math.Tan(b) - Tan_140(b)) / Tan_140(b)}, {Math.Atan(Math.Tan(b)) - Atan_66(Math.Tan(b))}, {Math.Atan(Math.Tan(b)) - Atan_137(Math.Tan(b))}");
         }
+    }
+
+    [MenuItem("Util/Benchmark Trig Approximations")]
+    static void Benchmark()
+    {
+        var r = new Random(1);
+        var s = new Stopwatch();
+        var l = new List<float>();
+        const int cycles = 100;
+
+        for (int i = 0; i < cycles; i++) 
+            l.Add(r.NextFloat((float) TwoPi));
+        
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Math.Cos(l[i]);
+        }
+        var systemCos = s.Elapsed.TotalMilliseconds;
+        
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Math.Sin(l[i]);
+        }
+        var systemSin = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Math.Tan(l[i]);
+        }
+        var systemTan = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Math.Atan(l[i]);
+        }
+        var systemAtan = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Cos_32(l[i]);
+        }
+        var cos32 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Cos_52(l[i]);
+        }
+        var cos52 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Cos_73(l[i]);
+        }
+        var cos73 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Cos_121(l[i]);
+        }
+        var cos121 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Sin_32(l[i]);
+        }
+        var sin32 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Sin_52(l[i]);
+        }
+        var sin52 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Sin_73(l[i]);
+        }
+        var sin73 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Sin_121(l[i]);
+        }
+        var sin121 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Tan_32(l[i]);
+        }
+        var tan32 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Tan_56(l[i]);
+        }
+        var tan56 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Tan_82(l[i]);
+        }
+        var tan82 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Tan_140(l[i]);
+        }
+        var tan140 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Atan_66(l[i]);
+        }
+        var atan66 = s.Elapsed.TotalMilliseconds;
+
+        s.Restart();
+        for (int i = 0; i < l.Count; i++)
+        {
+            var t = Atan_137(l[i]);
+        }
+        var atan137 = s.Elapsed.TotalMilliseconds;
+        
+        Debug.Log($"Cycles: {cycles}");
+        Debug.Log($"System Cos: {systemCos:.00}ms, Cos32: {cos32/systemCos:.000}, Cos52: {cos52/systemCos:.000}, Cos73: {cos73/systemCos:.000}, Cos121: {cos121/systemCos:.000}");
+        Debug.Log($"System Sin: {systemSin:.00}ms, Sin32: {sin32/systemSin:.000}, Sin52: {sin52/systemSin:.000}, Sin73: {sin73/systemSin:.000}, Sin121: {sin121/systemSin:.000}");
+        Debug.Log($"System Tan: {systemTan:.00}ms, Tan32: {tan32/systemTan:.000}, Tan56: {tan56/systemTan:.000}, Tan82: {tan82/systemTan:.000}, Tan140: {tan140/systemTan:.000}");
+        Debug.Log($"System Atan: {systemAtan:.00}ms, Atan66: {atan66/systemAtan:.000}, Atan137: {atan137/systemAtan:.000}");
     }
 }
