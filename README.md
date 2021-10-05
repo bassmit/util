@@ -6,6 +6,7 @@ Math and utility functions:
 - easing
 - noise
 - rigidbody prediction
+- trigonometry approximations
 
 Collections:
 
