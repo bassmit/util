@@ -61,15 +61,28 @@ public static class TrigApprox
         };
     }
 
-    public static float cos(float x)
+    // https://stackoverflow.com/a/28050328/175592, optimized version of https://web.archive.org/web/20141118170202/http://forum.devmaster.net/t/fast-and-accurate-sine-cosine/9648
+    public static float FastCos(float x)
     {
         const float tp = (float) (1 / (2 * Pi));
         
         x *= tp;
         x -= .25f + math.floor(x + .25f);
         x *= 16 * (math.abs(x) - .5f);
-        //x += .225f * x * (math.abs(x) - 1);
+        x += .225f * x * (math.abs(x) - 1); // optional, provides more precision
         return x;
+    }
+    
+    // Nr 9 in http://www-labs.iro.umontreal.ca/~mignotte/IFT2425/Documents/EfficientApproximationArctgFunction.pdf
+    public static double FastAtan(double x)
+    {
+        return Pi / 4 * x - x * (math.abs(x) - 1) * (0.2447 + 0.0663 * math.abs(x));
+    }
+
+    // S(2,a) from https://mae.ufl.edu/~uhk/ACCURATE-TANGENT.pdf
+    public static double FastTan(double x)
+    {
+        return (945 * x - 105 * x * x * x + x * x * x * x * x) / (945 - 420 * x * x + 15 * x * x * x * x);
     }
 
     /// <summary>
@@ -424,7 +437,7 @@ public static class TrigApprox
         // }
 
         var b = 217.345673f * Pi;
-        Debug.Log($"{cos((float) b)}, {Math.Cos(b) - cos((float) b)}");
+        Debug.Log($"{FastCos((float) b)}, {Math.Cos(b) - FastCos((float) b)}");
 
     }
 
@@ -463,20 +476,20 @@ class Foo : SystemBase
         // s.Restart();
         // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Sin(l[i])); } }).Run();
         // var systemSin = s.Elapsed.TotalMilliseconds;
-        //
-        // rr.Clear();
-        // s.Restart();
-        // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Tan(l[i])); } }).Run();
-        // var systemTan = s.Elapsed.TotalMilliseconds;
-        //
-        // rr.Clear();
-        // s.Restart();
-        // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Atan(l[i])); } }).Run();
-        // var systemAtan = s.Elapsed.TotalMilliseconds;
         
         rr.Clear();
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.cos(l[i])); } }).Run();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Tan(l[i])); } }).Run();
+        var systemTan = s.Elapsed.TotalMilliseconds;
+        
+        rr.Clear();
+        s.Restart();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Atan(l[i])); } }).Run();
+        var systemAtan = s.Elapsed.TotalMilliseconds;
+        
+        rr.Clear();
+        s.Restart();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.FastCos(l[i])); } }).Run();
         var cos32 = s.Elapsed.TotalMilliseconds;
         
         // rr.Clear();
@@ -513,12 +526,12 @@ class Foo : SystemBase
         // s.Restart();
         // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Sin_121(l[i])); } }).Run();
         // var sin121 = s.Elapsed.TotalMilliseconds;
-        //
-        // rr.Clear();
-        // s.Restart();
-        // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_32(l[i])); } }).Run();
-        // var tan32 = s.Elapsed.TotalMilliseconds;
-        //
+        
+        rr.Clear();
+        s.Restart();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.FastTan(l[i])); } }).Run();
+        var tan32 = s.Elapsed.TotalMilliseconds;
+        
         // rr.Clear();
         // s.Restart();
         // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_56(l[i])); } }).Run();
@@ -533,12 +546,12 @@ class Foo : SystemBase
         // s.Restart();
         // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_140(l[i])); } }).Run();
         // var tan140 = s.Elapsed.TotalMilliseconds;
-        //
-        // rr.Clear();
-        // s.Restart();
-        // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Atan_66(l[i])); } }).Run();
-        // var atan66 = s.Elapsed.TotalMilliseconds;
-        //
+        
+        rr.Clear();
+        s.Restart();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.FastAtan(l[i])); } }).Run();
+        var atan66 = s.Elapsed.TotalMilliseconds;
+        
         // rr.Clear();
         // s.Restart();
         // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Atan_137(l[i])); } }).Run();
@@ -547,7 +560,7 @@ class Foo : SystemBase
         Debug.Log($"Cycles: {cycles}");
         Debug.Log($"System Cos: {systemCos:.00}ms, Cos32: {cos32/systemCos:.000}"); // , Cos52: {cos52/systemCos:.000}, Cos73: {cos73/systemCos:.000}, Cos121: {cos121/systemCos:.000}");
         // Debug.Log($"System Sin: {systemSin:.00}ms, Sin32: {sin32/systemSin:.000}, Sin52: {sin52/systemSin:.000}, Sin73: {sin73/systemSin:.000}, Sin121: {sin121/systemSin:.000}");
-        // Debug.Log($"System Tan: {systemTan:.00}ms, Tan32: {tan32/systemTan:.000}, Tan56: {tan56/systemTan:.000}, Tan82: {tan82/systemTan:.000}, Tan140: {tan140/systemTan:.000}");
-        // Debug.Log($"System Atan: {systemAtan:.00}ms, Atan66: {atan66/systemAtan:.000}, Atan137: {atan137/systemAtan:.000}");
+         Debug.Log($"System Tan: {systemTan:.00}ms, Tan32: {tan32/systemTan:.000}");
+        Debug.Log($"System Atan: {systemAtan:.00}ms, Atan66: {atan66/systemAtan:.000}");
     }
 }
