@@ -26,6 +26,9 @@ public static class TrigApprox
         return c1 + x2 * (c2 + c3 * x2);
     }
 
+    /// <summary>
+    /// Cos with precision of approximately 3.2 decimal digits
+    /// </summary>
     public static float Cos_32(float x)
     {
         x %= (float) TwoPi;
@@ -42,6 +45,9 @@ public static class TrigApprox
         };
     }
 
+    /// <summary>
+    /// Sin with precision of approximately 3.2 decimal digits
+    /// </summary>
     public static float Sin_32(float x) => Cos_32((float) HalfPi - x);
 
     static float Cos_52s(float x)
@@ -55,6 +61,9 @@ public static class TrigApprox
         return c1 + x2 * (c2 + x2 * (c3 + c4 * x2));
     }
 
+    /// <summary>
+    /// Cos with precision of approximately 5.2 decimal digits
+    /// </summary>
     public static float Cos_52(float x)
     {
         x %= (float) TwoPi;
@@ -71,6 +80,9 @@ public static class TrigApprox
         };
     }
 
+    /// <summary>
+    /// Sin with precision of approximately 5.2 decimal digits
+    /// </summary>
     public static float Sin_52(float x) => Cos_52((float) HalfPi - x);
 
     static double Cos_73s(double x)
@@ -86,6 +98,9 @@ public static class TrigApprox
         return c1 + x2 * (c2 + x2 * (c3 + x2 * (c4 + c5 * x2)));
     }
 
+    /// <summary>
+    /// Cos with precision of approximately 7.3 decimal digits
+    /// </summary>
     public static double Cos_73(double x)
     {
         x %= TwoPi;
@@ -102,6 +117,9 @@ public static class TrigApprox
         };
     }
 
+    /// <summary>
+    /// Sin with precision of approximately 7.3 decimal digits
+    /// </summary>
     public static double Sin_73(double x) => Cos_73(HalfPi - x);
 
     static double Cos_121s(double x)
@@ -118,6 +136,9 @@ public static class TrigApprox
         return c1 + x2 * (c2 + x2 * (c3 + x2 * (c4 + x2 * (c5 + x2 * (c6 + c7 * x2)))));
     }
 
+    /// <summary>
+    /// Cos with precision of approximately 12.1 decimal digits
+    /// </summary>
     public static double Cos_121(double x)
     {
         x %= TwoPi;
@@ -134,6 +155,9 @@ public static class TrigApprox
         };
     }
 
+    /// <summary>
+    /// Sin with precision of approximately 12.1 decimal digits
+    /// </summary>
     public static double Sin_121(double x) => Cos_121(HalfPi - x);
 
     static float Tan_32s(float x)
@@ -148,6 +172,10 @@ public static class TrigApprox
 
     /// <summary>
     /// input not tested for tangent approaching infinity, which it will at x=pi/2 and x=3*pi/2
+    /// </summary>
+
+    /// <summary>
+    /// Tan with precision of approximately 3.2 decimal digits
     /// </summary>
     public static float Tan_32(float x)
     {
@@ -180,6 +208,12 @@ public static class TrigApprox
 
     /// <summary>
     /// input not tested for tangent approaching infinity, which it will at x=pi/2 and x=3*pi/2
+    /// </summary>
+    ///
+    /// 
+
+    /// <summary>
+    /// Tan with precision of approximately 5.6 decimal digits
     /// </summary>
     public static float Tan_56(float x)
     {
@@ -214,6 +248,10 @@ public static class TrigApprox
     /// <summary>
     /// input not tested for tangent approaching infinity, which it will at x=pi/2 and x=3*pi/2
     /// </summary>
+    
+    /// <summary>
+    /// Tan with precision of approximately 8.2 decimal digits
+    /// </summary>
     public static double Tan_82(double x)
     {
         x %= TwoPi;
@@ -246,6 +284,9 @@ public static class TrigApprox
         return x * (c1 + x2 * (c2 + x2 * c3)) / (c4 + x2 * (c5 + x2 * (c6 + x2)));
     }
 
+    /// <summary>
+    /// Tan with precision of approximately 14 decimal digits
+    /// </summary>
     public static double Tan_14(double x)
     {
         x %= TwoPi;
@@ -276,6 +317,9 @@ public static class TrigApprox
         return x * (c1 + x2 * c2) / (c3 + x2);
     }
 
+    /// <summary>
+    /// Atan with precision of approximately 6.6 decimal digits
+    /// </summary>
     public static double Atan_66(double x)
     {
         var complement = false;
@@ -320,6 +364,9 @@ public static class TrigApprox
         return x * (c1 + x2 * (c2 + x2 * c3)) / (c4 + x2 * (c5 + x2 * (c6 + x2)));
     }
 
+    /// <summary>
+    /// Atan with precision of approximately 13.7 decimal digits
+    /// </summary>
     public static double Atan_137(double x)
     {
         var complement = false;
