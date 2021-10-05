@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Unity.Mathematics;
 using UnityEditor;
 using Debug = UnityEngine.Debug;
 using Random = Unity.Mathematics.Random;
