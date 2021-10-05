@@ -1,6 +1,8 @@
 // http://www.ganssle.com/item/approximations-for-trig-c-code.htm
 
 using System;
+using UnityEditor;
+using UnityEngine;
 
 public static class TrigApprox
 {
@@ -347,5 +349,17 @@ public static class TrigApprox
         if (complement) y = HalfPi - y;
         if (sign) y = -y;
         return y;
+    }
+    
+    [MenuItem("Util/Print Trig Approximations")]
+    static void Print()
+    {
+        Debug.Log("x, Cosine, Sine, Tangent, aTan, cos_32  Error, sin_32 Error, cos_52  Error, sin_52 Error, cos_73  Error, sin_73 Error, cos_121 Error, sin_121 Error, tan_32  pc Error, tan_56  pc Error, tan_82  pc Error, tan_14  pc Error, atan_66 Error, atan_137 Error");
+
+        for (var i = 0; i < 361; i += 1)
+        {
+            var b = i * 2.0 * Pi / 360.0;
+            Debug.Log($"{i}, {System.Math.Cos(b)}, {System.Math.Sin(b)}, {System.Math.Tan(b)}, {System.Math.Atan(System.Math.Tan(b))}, {System.Math.Cos(b) - cos_32((float) b)}, {System.Math.Sin(b) - sin_32((float) b)}, {System.Math.Cos(b) - cos_52((float) b)}, {System.Math.Sin(b) - sin_52((float) b)}, {System.Math.Cos(b) - cos_73(b)}, {System.Math.Sin(b) - sin_73(b)}, {System.Math.Cos(b) - cos_121(b)}, {System.Math.Sin(b) - sin_121(b)}, {100.0 * (System.Math.Tan(b) - tan_32((float) b)) / tan_32((float) b)}, {100.0 * (System.Math.Tan(b) - tan_56((float) b)) / tan_56((float) b)}, {100.0 * (System.Math.Tan(b) - tan_82(b)) / tan_82(b)}, {100.0 * (System.Math.Tan(b) - tan_14(b)) / tan_14(b)}, {System.Math.Atan(System.Math.Tan(b)) - atan_66(System.Math.Tan(b))}, {System.Math.Atan(System.Math.Tan(b)) - atan_137(System.Math.Tan(b))}");
+        }
     }
 }
