@@ -1,11 +1,12 @@
 // http://www.ganssle.com/item/approximations-for-trig-c-code.htm
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
 using Random = Unity.Mathematics.Random;
 
@@ -404,6 +405,7 @@ public static class TrigApprox
     [MenuItem("Util/Benchmark Trig Approximations")]
     static void Benchmark()
     {
+        Assert.IsTrue(Application.isPlaying);
         var world = World.All[0];
         var sys = world.GetOrCreateSystem<Foo>();
         sys.Update();
@@ -420,80 +422,100 @@ class Foo : SystemBase
         var s = new Stopwatch();
         var l = new NativeList<float>(Allocator.Temp);
         const int cycles = 1000 * 1000;
-
+        var rr = new NativeList<double>(cycles, Allocator.Temp);
+        
+        
         for (int i = 0; i < cycles; i++)
             l.Add(r.NextFloat((float) (2 * Math.PI)));
         
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { var t = Math.Cos(l[i]); } }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Cos(l[i])); } }).Run();
         var systemCos = s.Elapsed.TotalMilliseconds;
         
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { var t = Math.Sin(l[i]); } }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Sin(l[i])); } }).Run();
         var systemSin = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { var t = Math.Tan(l[i]); } }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Tan(l[i])); } }).Run();
         var systemTan = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { var t = Math.Atan(l[i]); } }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Atan(l[i])); } }).Run();
         var systemAtan = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Cos_32(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_32(l[i])); } }).Run();
         var cos32 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Cos_52(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_52(l[i])); } }).Run();
         var cos52 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Cos_73(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_73(l[i])); } }).Run();
         var cos73 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Cos_121(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_121(l[i])); } }).Run();
         var cos121 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Sin_32(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Sin_32(l[i])); } }).Run();
         var sin32 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Sin_52(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Sin_52(l[i])); } }).Run();
         var sin52 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Sin_73(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Sin_73(l[i])); } }).Run();
         var sin73 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Sin_121(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Sin_121(l[i])); } }).Run();
         var sin121 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Tan_32(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_32(l[i])); } }).Run();
         var tan32 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Tan_56(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_56(l[i])); } }).Run();
         var tan56 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Tan_82(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_82(l[i])); } }).Run();
         var tan82 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Tan_140(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_140(l[i])); } }).Run();
         var tan140 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Atan_66(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Atan_66(l[i])); } }).Run();
         var atan66 = s.Elapsed.TotalMilliseconds;
 
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) TrigApprox.Atan_137(l[i]); }).Run();
+        rr.Clear();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Atan_137(l[i])); } }).Run();
         var atan137 = s.Elapsed.TotalMilliseconds;
         
         Debug.Log($"Cycles: {cycles}");
