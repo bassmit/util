@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -42,9 +43,11 @@ public static class TrigApprox
     {
         if (x < 0)
             x = -x;
+
+        x %= (float)TwoPi;
         
-        while (x > (float) TwoPi)
-            x -= (float) TwoPi;
+        // while (x > (float) TwoPi)
+        //     x -= (float) TwoPi;
         
         var quad = (int) (x * TwoOverPi);
 
@@ -56,6 +59,17 @@ public static class TrigApprox
             3 => Cos_32s((float) TwoPi - x),
             _ => throw new ArgumentOutOfRangeException()
         };
+    }
+
+    public static float cos(float x)
+    {
+        const float tp = (float) (1 / (2 * Pi));
+        
+        x *= tp;
+        x -= .25f + math.floor(x + .25f);
+        x *= 16 * (math.abs(x) - .5f);
+        //x += .225f * x * (math.abs(x) - 1);
+        return x;
     }
 
     /// <summary>
@@ -401,13 +415,17 @@ public static class TrigApprox
     [MenuItem("Util/Print Trig Approximations")]
     static void Print()
     {
-        Debug.Log("x, Cosine, Sine, Tangent, aTan, Cos_32  Error, Sin_32 Error, Cos_52  Error, Sin_52 Error, Cos_73  Error, Sin_73 Error, Cos_121 Error, Sin_121 Error, Tan_32  pc Error, Tan_56  pc Error, Tan_82  pc Error, Tan_140  pc Error, Atan_66 Error, Atan_137 Error");
-        
-        for (var i = 0; i < 361; i += 1)
-        {
-            var b = i * 2.0 * Pi / 360.0;
-            Debug.Log($"{i}, {Math.Cos(b)}, {Math.Sin(b)}, {Math.Tan(b)}, {Math.Atan(Math.Tan(b))}, {Math.Cos(b) - Cos_32((float) b)}, {Math.Sin(b) - Sin_32((float) b)}, {Math.Cos(b) - Cos_52((float) b)}, {Math.Sin(b) - Sin_52((float) b)}, {Math.Cos(b) - Cos_73(b)}, {Math.Sin(b) - Sin_73(b)}, {Math.Cos(b) - Cos_121(b)}, {Math.Sin(b) - Sin_121(b)}, {100.0 * (Math.Tan(b) - Tan_32((float) b)) / Tan_32((float) b)}, {100.0 * (Math.Tan(b) - Tan_56((float) b)) / Tan_56((float) b)}, {100.0 * (Math.Tan(b) - Tan_82(b)) / Tan_82(b)}, {100.0 * (Math.Tan(b) - Tan_140(b)) / Tan_140(b)}, {Math.Atan(Math.Tan(b)) - Atan_66(Math.Tan(b))}, {Math.Atan(Math.Tan(b)) - Atan_137(Math.Tan(b))}");
-        }
+        // Debug.Log("x, Cosine, Sine, Tangent, aTan, Cos_32  Error, Sin_32 Error, Cos_52  Error, Sin_52 Error, Cos_73  Error, Sin_73 Error, Cos_121 Error, Sin_121 Error, Tan_32  pc Error, Tan_56  pc Error, Tan_82  pc Error, Tan_140  pc Error, Atan_66 Error, Atan_137 Error");
+        //
+        // for (var i = 0; i < 361; i += 1)
+        // {
+        //     var b = i * 2.0 * Pi / 360.0;
+        //     Debug.Log($"{i}, {Math.Cos(b)}, {Math.Sin(b)}, {Math.Tan(b)}, {Math.Atan(Math.Tan(b))}, {Math.Cos(b) - Cos_32((float) b)}, {Math.Sin(b) - Sin_32((float) b)}, {Math.Cos(b) - Cos_52((float) b)}, {Math.Sin(b) - Sin_52((float) b)}, {Math.Cos(b) - Cos_73(b)}, {Math.Sin(b) - Sin_73(b)}, {Math.Cos(b) - Cos_121(b)}, {Math.Sin(b) - Sin_121(b)}, {100.0 * (Math.Tan(b) - Tan_32((float) b)) / Tan_32((float) b)}, {100.0 * (Math.Tan(b) - Tan_56((float) b)) / Tan_56((float) b)}, {100.0 * (Math.Tan(b) - Tan_82(b)) / Tan_82(b)}, {100.0 * (Math.Tan(b) - Tan_140(b)) / Tan_140(b)}, {Math.Atan(Math.Tan(b)) - Atan_66(Math.Tan(b))}, {Math.Atan(Math.Tan(b)) - Atan_137(Math.Tan(b))}");
+        // }
+
+        var b = 217.345673f * Pi;
+        Debug.Log($"{cos((float) b)}, {Math.Cos(b) - cos((float) b)}");
+
     }
 
     [MenuItem("Util/Benchmark Trig Approximations")]
@@ -458,7 +476,7 @@ class Foo : SystemBase
         
         rr.Clear();
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_32(l[i])); } }).Run();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.cos(l[i])); } }).Run();
         var cos32 = s.Elapsed.TotalMilliseconds;
         
         // rr.Clear();
