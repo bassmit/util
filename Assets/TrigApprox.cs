@@ -428,93 +428,93 @@ class Foo : SystemBase
         for (int i = 0; i < cycles; i++)
             l.Add(r.NextFloat((float) (2 * Math.PI)));
         
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Cos(l[i])); } }).Run();
         var systemCos = s.Elapsed.TotalMilliseconds;
         
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Sin(l[i])); } }).Run();
         var systemSin = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Tan(l[i])); } }).Run();
         var systemTan = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++) { rr.Add(Math.Atan(l[i])); } }).Run();
         var systemAtan = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_32(l[i])); } }).Run();
         var cos32 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_52(l[i])); } }).Run();
         var cos52 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_73(l[i])); } }).Run();
         var cos73 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_121(l[i])); } }).Run();
         var cos121 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Sin_32(l[i])); } }).Run();
         var sin32 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Sin_52(l[i])); } }).Run();
         var sin52 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Sin_73(l[i])); } }).Run();
         var sin73 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Sin_121(l[i])); } }).Run();
         var sin121 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_32(l[i])); } }).Run();
         var tan32 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_56(l[i])); } }).Run();
         var tan56 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_82(l[i])); } }).Run();
         var tan82 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Tan_140(l[i])); } }).Run();
         var tan140 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Atan_66(l[i])); } }).Run();
         var atan66 = s.Elapsed.TotalMilliseconds;
 
-        s.Restart();
         rr.Clear();
+        s.Restart();
         Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Atan_137(l[i])); } }).Run();
         var atan137 = s.Elapsed.TotalMilliseconds;
         
