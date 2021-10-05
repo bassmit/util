@@ -171,11 +171,7 @@ public static class TrigApprox
 
 
     /// <summary>
-    /// input not tested for tangent approaching infinity, which it will at x=pi/2 and x=3*pi/2
-    /// </summary>
-
-    /// <summary>
-    /// Tan with precision of approximately 3.2 decimal digits
+    /// Tan with precision of approximately 3.2 decimal digits, inputs near pi/2 and 3*pi/2 return infinity
     /// </summary>
     public static float Tan_32(float x)
     {
@@ -207,13 +203,7 @@ public static class TrigApprox
     }
 
     /// <summary>
-    /// input not tested for tangent approaching infinity, which it will at x=pi/2 and x=3*pi/2
-    /// </summary>
-    ///
-    /// 
-
-    /// <summary>
-    /// Tan with precision of approximately 5.6 decimal digits
+    /// Tan with precision of approximately 5.6 decimal digits, inputs near pi/2 and 3*pi/2 return infinity
     /// </summary>
     public static float Tan_56(float x)
     {
@@ -246,11 +236,7 @@ public static class TrigApprox
     }
 
     /// <summary>
-    /// input not tested for tangent approaching infinity, which it will at x=pi/2 and x=3*pi/2
-    /// </summary>
-    
-    /// <summary>
-    /// Tan with precision of approximately 8.2 decimal digits
+    /// Tan with precision of approximately 8.2 decimal digits, inputs near pi/2 and 3*pi/2 return infinity
     /// </summary>
     public static double Tan_82(double x)
     {
@@ -271,7 +257,7 @@ public static class TrigApprox
         };
     }
 
-    static double Tan_14s(double x)
+    static double Tan_140s(double x)
     {
         const double c1 = -34287.4662577359568109624;
         const double c2 = 2566.7175462315050423295;
@@ -285,23 +271,23 @@ public static class TrigApprox
     }
 
     /// <summary>
-    /// Tan with precision of approximately 14 decimal digits
+    /// Tan with precision of approximately 14.0 decimal digits, inputs near pi/2 and 3*pi/2 return infinity
     /// </summary>
-    public static double Tan_14(double x)
+    public static double Tan_140(double x)
     {
         x %= TwoPi;
         var octant = (int) (x * FourOverPi);
 
         return octant switch
         {
-            0 => Tan_14s(x * FourOverPi),
-            1 => (1.0 / Tan_14s((HalfPi - x) * FourOverPi)),
-            2 => (-1.0 / Tan_14s((x - HalfPi) * FourOverPi)),
-            3 => -Tan_14s((Pi - x) * FourOverPi),
-            4 => Tan_14s((x - Pi) * FourOverPi),
-            5 => (1.0 / Tan_14s((ThreeHalfPi - x) * FourOverPi)),
-            6 => (-1.0 / Tan_14s((x - ThreeHalfPi) * FourOverPi)),
-            7 => -Tan_14s((TwoPi - x) * FourOverPi),
+            0 => Tan_140s(x * FourOverPi),
+            1 => (1.0 / Tan_140s((HalfPi - x) * FourOverPi)),
+            2 => (-1.0 / Tan_140s((x - HalfPi) * FourOverPi)),
+            3 => -Tan_140s((Pi - x) * FourOverPi),
+            4 => Tan_140s((x - Pi) * FourOverPi),
+            5 => (1.0 / Tan_140s((ThreeHalfPi - x) * FourOverPi)),
+            6 => (-1.0 / Tan_140s((x - ThreeHalfPi) * FourOverPi)),
+            7 => -Tan_140s((TwoPi - x) * FourOverPi),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -401,12 +387,12 @@ public static class TrigApprox
     [MenuItem("Util/Print Trig Approximations")]
     static void Print()
     {
-        Debug.Log("x, Cosine, Sine, Tangent, aTan, Cos_32  Error, Sin_32 Error, Cos_52  Error, Sin_52 Error, Cos_73  Error, Sin_73 Error, Cos_121 Error, Sin_121 Error, Tan_32  pc Error, Tan_56  pc Error, Tan_82  pc Error, Tan_14  pc Error, Atan_66 Error, Atan_137 Error");
-
+        Debug.Log("x, Cosine, Sine, Tangent, aTan, Cos_32  Error, Sin_32 Error, Cos_52  Error, Sin_52 Error, Cos_73  Error, Sin_73 Error, Cos_121 Error, Sin_121 Error, Tan_32  pc Error, Tan_56  pc Error, Tan_82  pc Error, Tan_140  pc Error, Atan_66 Error, Atan_137 Error");
+        
         for (var i = 0; i < 361; i += 1)
         {
             var b = i * 2.0 * Pi / 360.0;
-            Debug.Log($"{i}, {Math.Cos(b)}, {Math.Sin(b)}, {Math.Tan(b)}, {Math.Atan(Math.Tan(b))}, {Math.Cos(b) - Cos_32((float) b)}, {Math.Sin(b) - Sin_32((float) b)}, {Math.Cos(b) - Cos_52((float) b)}, {Math.Sin(b) - Sin_52((float) b)}, {Math.Cos(b) - Cos_73(b)}, {Math.Sin(b) - Sin_73(b)}, {Math.Cos(b) - Cos_121(b)}, {Math.Sin(b) - Sin_121(b)}, {100.0 * (Math.Tan(b) - Tan_32((float) b)) / Tan_32((float) b)}, {100.0 * (Math.Tan(b) - Tan_56((float) b)) / Tan_56((float) b)}, {100.0 * (Math.Tan(b) - Tan_82(b)) / Tan_82(b)}, {100.0 * (Math.Tan(b) - Tan_14(b)) / Tan_14(b)}, {Math.Atan(Math.Tan(b)) - Atan_66(Math.Tan(b))}, {Math.Atan(Math.Tan(b)) - Atan_137(Math.Tan(b))}");
+            Debug.Log($"{i}, {Math.Cos(b)}, {Math.Sin(b)}, {Math.Tan(b)}, {Math.Atan(Math.Tan(b))}, {Math.Cos(b) - Cos_32((float) b)}, {Math.Sin(b) - Sin_32((float) b)}, {Math.Cos(b) - Cos_52((float) b)}, {Math.Sin(b) - Sin_52((float) b)}, {Math.Cos(b) - Cos_73(b)}, {Math.Sin(b) - Sin_73(b)}, {Math.Cos(b) - Cos_121(b)}, {Math.Sin(b) - Sin_121(b)}, {100.0 * (Math.Tan(b) - Tan_32((float) b)) / Tan_32((float) b)}, {100.0 * (Math.Tan(b) - Tan_56((float) b)) / Tan_56((float) b)}, {100.0 * (Math.Tan(b) - Tan_82(b)) / Tan_82(b)}, {100.0 * (Math.Tan(b) - Tan_140(b)) / Tan_140(b)}, {Math.Atan(Math.Tan(b)) - Atan_66(Math.Tan(b))}, {Math.Atan(Math.Tan(b)) - Atan_137(Math.Tan(b))}");
         }
     }
 }
