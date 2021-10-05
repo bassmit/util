@@ -16,7 +16,7 @@ public static class TrigApprox
     const double TanSixthPi = 0.00913877699601225973909035239229;
     const double TanTwelfthPi = 0.00456929309630527945159583147451;
 
-    static float cos_32s(float x)
+    static float Cos_32s(float x)
     {
         const float c1 = 0.99940307f;
         const float c2 = -0.49558072f;
@@ -26,7 +26,7 @@ public static class TrigApprox
         return c1 + x2 * (c2 + c3 * x2);
     }
 
-    public static float cos_32(float x)
+    public static float Cos_32(float x)
     {
         x %= (float) TwoPi;
         if (x < 0) x = -x;
@@ -34,17 +34,17 @@ public static class TrigApprox
 
         return quad switch
         {
-            0 => cos_32s(x),
-            1 => -cos_32s((float) Pi - x),
-            2 => -cos_32s(x - (float) Pi),
-            3 => cos_32s((float) TwoPi - x),
+            0 => Cos_32s(x),
+            1 => -Cos_32s((float) Pi - x),
+            2 => -Cos_32s(x - (float) Pi),
+            3 => Cos_32s((float) TwoPi - x),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public static float sin_32(float x) => cos_32((float) HalfPi - x);
+    public static float Sin_32(float x) => Cos_32((float) HalfPi - x);
 
-    static float cos_52s(float x)
+    static float Cos_52s(float x)
     {
         const float c1 = 0.9999932946f;
         const float c2 = -0.4999124376f;
@@ -55,7 +55,7 @@ public static class TrigApprox
         return c1 + x2 * (c2 + x2 * (c3 + c4 * x2));
     }
 
-    public static float cos_52(float x)
+    public static float Cos_52(float x)
     {
         x %= (float) TwoPi;
         if (x < 0) x = -x;
@@ -63,17 +63,17 @@ public static class TrigApprox
 
         return quad switch
         {
-            0 => cos_52s(x),
-            1 => -cos_52s((float) Pi - x),
-            2 => -cos_52s(x - (float) Pi),
-            3 => cos_52s((float) TwoPi - x),
+            0 => Cos_52s(x),
+            1 => -Cos_52s((float) Pi - x),
+            2 => -Cos_52s(x - (float) Pi),
+            3 => Cos_52s((float) TwoPi - x),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public static float sin_52(float x) => cos_52((float) HalfPi - x);
+    public static float Sin_52(float x) => Cos_52((float) HalfPi - x);
 
-    static double cos_73s(double x)
+    static double Cos_73s(double x)
     {
         const double c1 = 0.999999953464;
         const double c2 = -0.499999053455;
@@ -86,7 +86,7 @@ public static class TrigApprox
         return c1 + x2 * (c2 + x2 * (c3 + x2 * (c4 + c5 * x2)));
     }
 
-    public static double cos_73(double x)
+    public static double Cos_73(double x)
     {
         x %= TwoPi;
         if (x < 0) x = -x;
@@ -94,17 +94,17 @@ public static class TrigApprox
 
         return quad switch
         {
-            0 => cos_73s(x),
-            1 => -cos_73s(Pi - x),
-            2 => -cos_73s(x - Pi),
-            3 => cos_73s(TwoPi - x),
+            0 => Cos_73s(x),
+            1 => -Cos_73s(Pi - x),
+            2 => -Cos_73s(x - Pi),
+            3 => Cos_73s(TwoPi - x),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public static double sin_73(double x) => cos_73(HalfPi - x);
+    public static double Sin_73(double x) => Cos_73(HalfPi - x);
 
-    static double cos_121s(double x)
+    static double Cos_121s(double x)
     {
         const double c1 = 0.99999999999925182;
         const double c2 = -0.49999999997024012;
@@ -118,7 +118,7 @@ public static class TrigApprox
         return c1 + x2 * (c2 + x2 * (c3 + x2 * (c4 + x2 * (c5 + x2 * (c6 + c7 * x2)))));
     }
 
-    public static double cos_121(double x)
+    public static double Cos_121(double x)
     {
         x %= TwoPi;
         if (x < 0) x = -x;
@@ -126,17 +126,17 @@ public static class TrigApprox
 
         return quad switch
         {
-            0 => cos_121s(x),
-            1 => -cos_121s(Pi - x),
-            2 => -cos_121s(x - Pi),
-            3 => cos_121s(TwoPi - x),
+            0 => Cos_121s(x),
+            1 => -Cos_121s(Pi - x),
+            2 => -Cos_121s(x - Pi),
+            3 => Cos_121s(TwoPi - x),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public static double sin_121(double x) => cos_121(HalfPi - x);
+    public static double Sin_121(double x) => Cos_121(HalfPi - x);
 
-    static float tan_32s(float x)
+    static float Tan_32s(float x)
     {
         const float c1 = -3.6112171f;
         const float c2 = -4.6133253f;
@@ -149,26 +149,26 @@ public static class TrigApprox
     /// <summary>
     /// input not tested for tangent approaching infinity, which it will at x=pi/2 and x=3*pi/2
     /// </summary>
-    public static float tan_32(float x)
+    public static float Tan_32(float x)
     {
         x %= (float) TwoPi;
         var octant = (int) (x * FourOverPi);
 
         return octant switch
         {
-            0 => tan_32s(x * (float) FourOverPi),
-            1 => (1f / tan_32s(((float) HalfPi - x) * (float) FourOverPi)),
-            2 => (-1f / tan_32s((x - (float) HalfPi) * (float) FourOverPi)),
-            3 => -tan_32s(((float) Pi - x) * (float) FourOverPi),
-            4 => tan_32s((x - (float) Pi) * (float) FourOverPi),
-            5 => (1f / tan_32s(((float) ThreeHalfPi - x) * (float) FourOverPi)),
-            6 => (-1f / tan_32s((x - (float) ThreeHalfPi) * (float) FourOverPi)),
-            7 => -tan_32s(((float) TwoPi - x) * (float) FourOverPi),
+            0 => Tan_32s(x * (float) FourOverPi),
+            1 => (1f / Tan_32s(((float) HalfPi - x) * (float) FourOverPi)),
+            2 => (-1f / Tan_32s((x - (float) HalfPi) * (float) FourOverPi)),
+            3 => -Tan_32s(((float) Pi - x) * (float) FourOverPi),
+            4 => Tan_32s((x - (float) Pi) * (float) FourOverPi),
+            5 => (1f / Tan_32s(((float) ThreeHalfPi - x) * (float) FourOverPi)),
+            6 => (-1f / Tan_32s((x - (float) ThreeHalfPi) * (float) FourOverPi)),
+            7 => -Tan_32s(((float) TwoPi - x) * (float) FourOverPi),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    static float tan_56s(float x)
+    static float Tan_56s(float x)
     {
         const float c1 = -3.16783027f;
         const float c2 = 0.134516124f;
@@ -181,26 +181,26 @@ public static class TrigApprox
     /// <summary>
     /// input not tested for tangent approaching infinity, which it will at x=pi/2 and x=3*pi/2
     /// </summary>
-    public static float tan_56(float x)
+    public static float Tan_56(float x)
     {
         x %= (float) TwoPi;
         var octant = (int) (x * FourOverPi);
 
         return octant switch
         {
-            0 => tan_56s(x * (float) FourOverPi),
-            1 => (1f / tan_56s(((float) HalfPi - x) * (float) FourOverPi)),
-            2 => (-1f / tan_56s((x - (float) HalfPi) * (float) FourOverPi)),
-            3 => -tan_56s(((float) Pi - x) * (float) FourOverPi),
-            4 => tan_56s((x - (float) Pi) * (float) FourOverPi),
-            5 => (1f / tan_56s(((float) ThreeHalfPi - x) * (float) FourOverPi)),
-            6 => (-1f / tan_56s((x - (float) ThreeHalfPi) * (float) FourOverPi)),
-            7 => -tan_56s(((float) TwoPi - x) * (float) FourOverPi),
+            0 => Tan_56s(x * (float) FourOverPi),
+            1 => (1f / Tan_56s(((float) HalfPi - x) * (float) FourOverPi)),
+            2 => (-1f / Tan_56s((x - (float) HalfPi) * (float) FourOverPi)),
+            3 => -Tan_56s(((float) Pi - x) * (float) FourOverPi),
+            4 => Tan_56s((x - (float) Pi) * (float) FourOverPi),
+            5 => (1f / Tan_56s(((float) ThreeHalfPi - x) * (float) FourOverPi)),
+            6 => (-1f / Tan_56s((x - (float) ThreeHalfPi) * (float) FourOverPi)),
+            7 => -Tan_56s(((float) TwoPi - x) * (float) FourOverPi),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public static double tan_82s(double x)
+    public static double Tan_82s(double x)
     {
         const double c1 = 211.849369664121;
         const double c2 = -12.5288887278448;
@@ -214,26 +214,26 @@ public static class TrigApprox
     /// <summary>
     /// input not tested for tangent approaching infinity, which it will at x=pi/2 and x=3*pi/2
     /// </summary>
-    public static double tan_82(double x)
+    public static double Tan_82(double x)
     {
         x %= TwoPi;
         var octant = (int) (x * FourOverPi);
 
         return octant switch
         {
-            0 => tan_82s(x * FourOverPi),
-            1 => (1.0 / tan_82s((HalfPi - x) * FourOverPi)),
-            2 => (-1.0 / tan_82s((x - HalfPi) * FourOverPi)),
-            3 => -tan_82s((Pi - x) * FourOverPi),
-            4 => tan_82s((x - Pi) * FourOverPi),
-            5 => (1.0 / tan_82s((ThreeHalfPi - x) * FourOverPi)),
-            6 => (-1.0 / tan_82s((x - ThreeHalfPi) * FourOverPi)),
-            7 => -tan_82s((TwoPi - x) * FourOverPi),
+            0 => Tan_82s(x * FourOverPi),
+            1 => (1.0 / Tan_82s((HalfPi - x) * FourOverPi)),
+            2 => (-1.0 / Tan_82s((x - HalfPi) * FourOverPi)),
+            3 => -Tan_82s((Pi - x) * FourOverPi),
+            4 => Tan_82s((x - Pi) * FourOverPi),
+            5 => (1.0 / Tan_82s((ThreeHalfPi - x) * FourOverPi)),
+            6 => (-1.0 / Tan_82s((x - ThreeHalfPi) * FourOverPi)),
+            7 => -Tan_82s((TwoPi - x) * FourOverPi),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    static double tan_14s(double x)
+    static double Tan_14s(double x)
     {
         const double c1 = -34287.4662577359568109624;
         const double c2 = 2566.7175462315050423295;
@@ -246,26 +246,26 @@ public static class TrigApprox
         return x * (c1 + x2 * (c2 + x2 * c3)) / (c4 + x2 * (c5 + x2 * (c6 + x2)));
     }
 
-    public static double tan_14(double x)
+    public static double Tan_14(double x)
     {
         x %= TwoPi;
         var octant = (int) (x * FourOverPi);
 
         return octant switch
         {
-            0 => tan_14s(x * FourOverPi),
-            1 => (1.0 / tan_14s((HalfPi - x) * FourOverPi)),
-            2 => (-1.0 / tan_14s((x - HalfPi) * FourOverPi)),
-            3 => -tan_14s((Pi - x) * FourOverPi),
-            4 => tan_14s((x - Pi) * FourOverPi),
-            5 => (1.0 / tan_14s((ThreeHalfPi - x) * FourOverPi)),
-            6 => (-1.0 / tan_14s((x - ThreeHalfPi) * FourOverPi)),
-            7 => -tan_14s((TwoPi - x) * FourOverPi),
+            0 => Tan_14s(x * FourOverPi),
+            1 => (1.0 / Tan_14s((HalfPi - x) * FourOverPi)),
+            2 => (-1.0 / Tan_14s((x - HalfPi) * FourOverPi)),
+            3 => -Tan_14s((Pi - x) * FourOverPi),
+            4 => Tan_14s((x - Pi) * FourOverPi),
+            5 => (1.0 / Tan_14s((ThreeHalfPi - x) * FourOverPi)),
+            6 => (-1.0 / Tan_14s((x - ThreeHalfPi) * FourOverPi)),
+            7 => -Tan_14s((TwoPi - x) * FourOverPi),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    static double atan_66s(double x)
+    static double Atan_66s(double x)
     {
         const double c1 = 1.6867629106;
         const double c2 = 0.4378497304;
@@ -276,7 +276,7 @@ public static class TrigApprox
         return x * (c1 + x2 * c2) / (c3 + x2);
     }
 
-    public static double atan_66(double x)
+    public static double Atan_66(double x)
     {
         var complement = false;
         var region = false;
@@ -300,14 +300,14 @@ public static class TrigApprox
             region = true;
         }
 
-        var y = atan_66s(x);
+        var y = Atan_66s(x);
         if (region) y += SixthPi;
         if (complement) y = HalfPi - y;
         if (sign) y = -y;
         return y;
     }
 
-    static double atan_137s(double x)
+    static double Atan_137s(double x)
     {
         const double c1 = 48.70107004404898384;
         const double c2 = 49.5326263772254345;
@@ -320,7 +320,7 @@ public static class TrigApprox
         return x * (c1 + x2 * (c2 + x2 * c3)) / (c4 + x2 * (c5 + x2 * (c6 + x2)));
     }
 
-    public static double atan_137(double x)
+    public static double Atan_137(double x)
     {
         var complement = false;
         var region = false;
@@ -344,7 +344,7 @@ public static class TrigApprox
             region = true;
         }
 
-        var y = atan_137s(x);
+        var y = Atan_137s(x);
         if (region) y += SixthPi;
         if (complement) y = HalfPi - y;
         if (sign) y = -y;
@@ -354,12 +354,12 @@ public static class TrigApprox
     [MenuItem("Util/Print Trig Approximations")]
     static void Print()
     {
-        Debug.Log("x, Cosine, Sine, Tangent, aTan, cos_32  Error, sin_32 Error, cos_52  Error, sin_52 Error, cos_73  Error, sin_73 Error, cos_121 Error, sin_121 Error, tan_32  pc Error, tan_56  pc Error, tan_82  pc Error, tan_14  pc Error, atan_66 Error, atan_137 Error");
+        Debug.Log("x, Cosine, Sine, Tangent, aTan, Cos_32  Error, Sin_32 Error, Cos_52  Error, Sin_52 Error, Cos_73  Error, Sin_73 Error, Cos_121 Error, Sin_121 Error, Tan_32  pc Error, Tan_56  pc Error, Tan_82  pc Error, Tan_14  pc Error, Atan_66 Error, Atan_137 Error");
 
         for (var i = 0; i < 361; i += 1)
         {
             var b = i * 2.0 * Pi / 360.0;
-            Debug.Log($"{i}, {Math.Cos(b)}, {Math.Sin(b)}, {Math.Tan(b)}, {Math.Atan(Math.Tan(b))}, {Math.Cos(b) - cos_32((float) b)}, {Math.Sin(b) - sin_32((float) b)}, {Math.Cos(b) - cos_52((float) b)}, {Math.Sin(b) - sin_52((float) b)}, {Math.Cos(b) - cos_73(b)}, {Math.Sin(b) - sin_73(b)}, {Math.Cos(b) - cos_121(b)}, {Math.Sin(b) - sin_121(b)}, {100.0 * (Math.Tan(b) - tan_32((float) b)) / tan_32((float) b)}, {100.0 * (Math.Tan(b) - tan_56((float) b)) / tan_56((float) b)}, {100.0 * (Math.Tan(b) - tan_82(b)) / tan_82(b)}, {100.0 * (Math.Tan(b) - tan_14(b)) / tan_14(b)}, {Math.Atan(Math.Tan(b)) - atan_66(Math.Tan(b))}, {Math.Atan(Math.Tan(b)) - atan_137(Math.Tan(b))}");
+            Debug.Log($"{i}, {Math.Cos(b)}, {Math.Sin(b)}, {Math.Tan(b)}, {Math.Atan(Math.Tan(b))}, {Math.Cos(b) - Cos_32((float) b)}, {Math.Sin(b) - Sin_32((float) b)}, {Math.Cos(b) - Cos_52((float) b)}, {Math.Sin(b) - Sin_52((float) b)}, {Math.Cos(b) - Cos_73(b)}, {Math.Sin(b) - Sin_73(b)}, {Math.Cos(b) - Cos_121(b)}, {Math.Sin(b) - Sin_121(b)}, {100.0 * (Math.Tan(b) - Tan_32((float) b)) / Tan_32((float) b)}, {100.0 * (Math.Tan(b) - Tan_56((float) b)) / Tan_56((float) b)}, {100.0 * (Math.Tan(b) - Tan_82(b)) / Tan_82(b)}, {100.0 * (Math.Tan(b) - Tan_14(b)) / Tan_14(b)}, {Math.Atan(Math.Tan(b)) - Atan_66(Math.Tan(b))}, {Math.Atan(Math.Tan(b)) - Atan_137(Math.Tan(b))}");
         }
     }
 }
