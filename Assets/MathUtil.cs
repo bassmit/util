@@ -2,7 +2,7 @@ using System.Numerics;
 using Unity.Mathematics;
 using Unity.Assertions;
 
-public static class Math
+public static class MathUtil
 {
     public static float RangeMap(float f, float inStart, float inEnd, float outStart, float outEnd)
     {

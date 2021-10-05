@@ -359,7 +359,7 @@ public static class TrigApprox
         for (var i = 0; i < 361; i += 1)
         {
             var b = i * 2.0 * Pi / 360.0;
-            Debug.Log($"{i}, {System.Math.Cos(b)}, {System.Math.Sin(b)}, {System.Math.Tan(b)}, {System.Math.Atan(System.Math.Tan(b))}, {System.Math.Cos(b) - cos_32((float) b)}, {System.Math.Sin(b) - sin_32((float) b)}, {System.Math.Cos(b) - cos_52((float) b)}, {System.Math.Sin(b) - sin_52((float) b)}, {System.Math.Cos(b) - cos_73(b)}, {System.Math.Sin(b) - sin_73(b)}, {System.Math.Cos(b) - cos_121(b)}, {System.Math.Sin(b) - sin_121(b)}, {100.0 * (System.Math.Tan(b) - tan_32((float) b)) / tan_32((float) b)}, {100.0 * (System.Math.Tan(b) - tan_56((float) b)) / tan_56((float) b)}, {100.0 * (System.Math.Tan(b) - tan_82(b)) / tan_82(b)}, {100.0 * (System.Math.Tan(b) - tan_14(b)) / tan_14(b)}, {System.Math.Atan(System.Math.Tan(b)) - atan_66(System.Math.Tan(b))}, {System.Math.Atan(System.Math.Tan(b)) - atan_137(System.Math.Tan(b))}");
+            Debug.Log($"{i}, {Math.Cos(b)}, {Math.Sin(b)}, {Math.Tan(b)}, {Math.Atan(Math.Tan(b))}, {Math.Cos(b) - cos_32((float) b)}, {Math.Sin(b) - sin_32((float) b)}, {Math.Cos(b) - cos_52((float) b)}, {Math.Sin(b) - sin_52((float) b)}, {Math.Cos(b) - cos_73(b)}, {Math.Sin(b) - sin_73(b)}, {Math.Cos(b) - cos_121(b)}, {Math.Sin(b) - sin_121(b)}, {100.0 * (Math.Tan(b) - tan_32((float) b)) / tan_32((float) b)}, {100.0 * (Math.Tan(b) - tan_56((float) b)) / tan_56((float) b)}, {100.0 * (Math.Tan(b) - tan_82(b)) / tan_82(b)}, {100.0 * (Math.Tan(b) - tan_14(b)) / tan_14(b)}, {Math.Atan(Math.Tan(b)) - atan_66(Math.Tan(b))}, {Math.Atan(Math.Tan(b)) - atan_137(Math.Tan(b))}");
         }
     }
 }

@@ -298,7 +298,7 @@ public static class Intersect
 
         // Use parametric equation of lines to find intersection point
         var v = p3 - p1;
-        var t = Math.PerpDot(v, v2) / Math.PerpDot(v1, v2);
+        var t = MathUtil.PerpDot(v, v2) / MathUtil.PerpDot(v1, v2);
 
         v1 *= t;
         v1 += p1;
