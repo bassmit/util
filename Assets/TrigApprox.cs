@@ -15,14 +15,15 @@ using Random = Unity.Mathematics.Random;
 public static class TrigApprox
 {
     const double Pi = 3.1415926535897932384626433;
-    const double TwoPi = 2.0 * Pi;
+    internal const double TwoPi = 2.0 * Pi;
     const double TwoOverPi = 2.0 / Pi;
-    const double HalfPi = Pi / 2.0;
+    internal const double HalfPi = Pi / 2.0;
     const double ThreeHalfPi = 3.0 * Pi / 2.0;
     const double FourOverPi = 4.0 / Pi;
     const double SixthPi = Pi / 6.0;
     const double TanSixthPi = 0.00913877699601225973909035239229;
     const double TanTwelfthPi = 0.00456929309630527945159583147451;
+    const double TwoPiInv = 1 / TwoPi;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static float Cos_32s(float x)
@@ -41,15 +42,11 @@ public static class TrigApprox
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Cos_32(float x)
     {
-        if (x < 0)
-            x = -x;
+        x -= (int) (x * (float) TwoPiInv) * (float) TwoPi;
 
-        x %= (float)TwoPi;
-        
-        // while (x > (float) TwoPi)
-        //     x -= (float) TwoPi;
-        
-        var quad = (int) (x * TwoOverPi);
+        if (x < 0) x = -x;
+
+        var quad = (int) (x * (float) TwoOverPi);
 
         return quad switch
         {
@@ -107,7 +104,7 @@ public static class TrigApprox
     /// </summary>
     public static float Cos_52(float x)
     {
-        x %= (float) TwoPi;
+        x -= (int) (x * (float) TwoPiInv) * (float) TwoPi;
         if (x < 0) x = -x;
         var quad = (int) (x * TwoOverPi);
 
@@ -216,7 +213,7 @@ public static class TrigApprox
     /// </summary>
     public static float Tan_32(float x)
     {
-        x %= (float) TwoPi;
+        x -= (int) (x * (float) TwoPiInv) * (float) TwoPi;
         var octant = (int) (x * FourOverPi);
 
         return octant switch
@@ -248,7 +245,7 @@ public static class TrigApprox
     /// </summary>
     public static float Tan_56(float x)
     {
-        x %= (float) TwoPi;
+        x -= (int) (x * (float) TwoPiInv) * (float) TwoPi;
         var octant = (int) (x * FourOverPi);
 
         return octant switch
@@ -465,7 +462,7 @@ class Foo : SystemBase
         
         
         for (int i = 0; i < cycles; i++)
-            l.Add(r.NextFloat((float) (2 * Math.PI)));
+            l.Add(r.NextFloat((float) (200 * Math.PI)));
         
         rr.Clear();
         s.Restart();
@@ -489,23 +486,23 @@ class Foo : SystemBase
         
         rr.Clear();
         s.Restart();
-        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.FastCos(l[i])); } }).Run();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_32(l[i])); } }).Run();
         var cos32 = s.Elapsed.TotalMilliseconds;
         
-        // rr.Clear();
-        // s.Restart();
-        // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_52(l[i])); } }).Run();
-        // var cos52 = s.Elapsed.TotalMilliseconds;
-        //
-        // rr.Clear();
-        // s.Restart();
-        // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_73(l[i])); } }).Run();
-        // var cos73 = s.Elapsed.TotalMilliseconds;
-        //
-        // rr.Clear();
-        // s.Restart();
-        // Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_121(l[i])); } }).Run();
-        // var cos121 = s.Elapsed.TotalMilliseconds;
+        rr.Clear();
+        s.Restart();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_52(l[i])); } }).Run();
+        var cos52 = s.Elapsed.TotalMilliseconds;
+        
+        rr.Clear();
+        s.Restart();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_73(l[i])); } }).Run();
+        var cos73 = s.Elapsed.TotalMilliseconds;
+        
+        rr.Clear();
+        s.Restart();
+        Job.WithBurst().WithCode(() => { for (int i = 0; i < l.Length; i++)  { rr.Add(TrigApprox.Cos_121(l[i])); } }).Run();
+        var cos121 = s.Elapsed.TotalMilliseconds;
         //
         // rr.Clear();
         // s.Restart();
@@ -558,9 +555,9 @@ class Foo : SystemBase
         // var atan137 = s.Elapsed.TotalMilliseconds;
         
         Debug.Log($"Cycles: {cycles}");
-        Debug.Log($"System Cos: {systemCos:.00}ms, Cos32: {cos32/systemCos:.000}"); // , Cos52: {cos52/systemCos:.000}, Cos73: {cos73/systemCos:.000}, Cos121: {cos121/systemCos:.000}");
+        Debug.Log($"System Cos: {systemCos:.00}ms, Cos32: {cos32/systemCos:.000}, Cos52: {cos52/systemCos:.000}, Cos73: {cos73/systemCos:.000}, Cos121: {cos121/systemCos:.000}");
         // Debug.Log($"System Sin: {systemSin:.00}ms, Sin32: {sin32/systemSin:.000}, Sin52: {sin52/systemSin:.000}, Sin73: {sin73/systemSin:.000}, Sin121: {sin121/systemSin:.000}");
-         Debug.Log($"System Tan: {systemTan:.00}ms, Tan32: {tan32/systemTan:.000}");
-        Debug.Log($"System Atan: {systemAtan:.00}ms, Atan66: {atan66/systemAtan:.000}");
+        //Debug.Log($"System Tan: {systemTan:.00}ms, Tan32: {tan32/systemTan:.000}");
+        //Debug.Log($"System Atan: {systemAtan:.00}ms, Atan66: {atan66/systemAtan:.000}");
     }
 }
