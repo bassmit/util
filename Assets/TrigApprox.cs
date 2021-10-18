@@ -449,7 +449,7 @@ public static class TrigApprox
     }
 }
 
-// [DisableAutoCreation]
+[DisableAutoCreation]
 class Foo : SystemBase
 {
     protected override void OnUpdate()
