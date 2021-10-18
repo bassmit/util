@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.bassmit.lineburst": {
+      "version": "0.4.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.entities": "0.17.0-preview.42"
+      },
+      "url": "https://package.openupm.com"
+    },
     "com.unity.burst": {
       "version": "1.4.1",
       "depth": 1,
