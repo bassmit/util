@@ -1,6 +1,6 @@
 ﻿using Unity.Mathematics;
 
-// hyperphysics.phy-astr.gsu.edu/hbase/lindrg2.html#c2
+// hyperphysics.phy-astr.gsu.edu/hbase/lindrg2.html
 
 public static class Predict
 {
@@ -48,5 +48,12 @@ public static class Predict
         var a = math.pow(math.E_DBL, drag * time);
         var b = drag * mass;
         return (float3) ((drag * b * target * a + force * (a * (1d - drag * time) - 1d)) / (b * (a - 1d)));
+    }
+
+    public static float3 Velocity(double3 v0, double time, double mass, double drag, double3 force)
+    {
+        var a = force / (drag * mass);
+        var b = math.pow(math.E_DBL, -time * drag);
+        return (float3)(v0 * b + a * (1 - b));
     }
 }
