@@ -3,6 +3,12 @@ using static Unity.Mathematics.math;
 
 // hyperphysics.phy-astr.gsu.edu/hbase/lindrg2.html
 
+// Velocity with Linear Drag:
+// v = v0 * e^(-t / (m / b)) + ((m * g) / b) * (1 - e^(-t / (m / b)))
+
+// Distance with Linear Drag:
+// y = ((m * g) / b) * t + v * (m / b) * (1 - e^(-t / (m / b))) + ((m * g) / b) * (m / b) * (e^(-t / (m / b)) - 1)
+
 public static class Predict
 {
     public static float3 Velocity(double3 force, double drag, double time, double3 target, double mass)
