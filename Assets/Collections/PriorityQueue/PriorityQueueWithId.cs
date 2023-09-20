@@ -8,7 +8,7 @@ namespace Collections
 {
     [DebuggerDisplay("Count = {Count}")]
     [DebuggerTypeProxy(typeof(PriorityQueueWithIdDebugView<>))]
-    unsafe struct PriorityQueueWithId<T> where T : struct, IComparable<T>
+    unsafe struct PriorityQueueWithId<T> where T : unmanaged, IComparable<T>
     {
         readonly Allocator _allocator;
         List<Wrapper> _data;
@@ -175,7 +175,7 @@ namespace Collections
         }
     }
 
-    sealed class PriorityQueueWithIdDebugView<T> where T : struct, IComparable<T>
+    sealed class PriorityQueueWithIdDebugView<T> where T : unmanaged, IComparable<T>
     {
         PriorityQueueWithId<T> _data;
 

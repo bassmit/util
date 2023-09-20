@@ -7,7 +7,7 @@ namespace Collections
 {
     [DebuggerDisplay("Count = {Count}")]
     [DebuggerTypeProxy(typeof(PriorityQueueDebugView<>))]
-    struct PriorityQueue<T> where T : struct, IComparable<T>
+    struct PriorityQueue<T> where T : unmanaged, IComparable<T>
     {
         List<T> _data;
 
@@ -95,7 +95,7 @@ namespace Collections
         internal T DebugGet(int i) => _data[i];
     }
 
-    sealed class PriorityQueueDebugView<T> where T : struct, IComparable<T>
+    sealed class PriorityQueueDebugView<T> where T : unmanaged, IComparable<T>
     {
         PriorityQueue<T> _data;
 

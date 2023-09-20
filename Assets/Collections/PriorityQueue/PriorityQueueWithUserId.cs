@@ -8,7 +8,7 @@ namespace Collections
 {
     [DebuggerDisplay("Count = {Count}")]
     [DebuggerTypeProxy(typeof(PriorityQueueWithUserIdDebugView<,>))]
-    struct PriorityQueueWithUserId<T, TID> where T : unmanaged, PriorityQueueWithUserId<T, TID>.IElement where TID : struct, IEquatable<TID>
+    struct PriorityQueueWithUserId<T, TID> where T : unmanaged, PriorityQueueWithUserId<T, TID>.IElement where TID : unmanaged, IEquatable<TID>
     {
         List<T> _data;
         UnsafeHashMap<TID, int> _index;
@@ -119,7 +119,7 @@ namespace Collections
         internal T DebugGet(int i) => _data[i];
     }
 
-    sealed class PriorityQueueWithUserIdDebugView<T, TID> where T : unmanaged, PriorityQueueWithUserId<T, TID>.IElement where TID : struct, IEquatable<TID>
+    sealed class PriorityQueueWithUserIdDebugView<T, TID> where T : unmanaged, PriorityQueueWithUserId<T, TID>.IElement where TID : unmanaged, IEquatable<TID>
     {
         PriorityQueueWithUserId<T, TID> _data;
 
