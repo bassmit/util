@@ -15,9 +15,10 @@ public class PredictTest : MonoBehaviour, IConvertGameObjectToEntity
         float3 toTarget = target - transform.position;
 
         // todo automate syncing damping and mass
-        var mass = 1;
-        var drag = 0.2f;
-        var force = new float3(0, -9.81f, 0);
+        var mass = 100;
+        var drag = 0.6f;
+        var accel = new float3(0, -9.81f, 0);
+        var force = mass * accel;
         var v = Predict.Velocity(force, drag, Time, toTarget, mass);
         var vt = Predict.Velocity(v, Time, mass, drag, force);
 
